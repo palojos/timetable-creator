@@ -29,7 +29,7 @@ interface IeditEvent extends Action {
 interface IeditEventArgs {
   name?: string;
   time?: Schema.EventTime;
-  participants: {
+  participants?: {
     teacher?: Schema.Teacher;
     room?: Schema.Room;
     group?: Schema.Group;
@@ -37,7 +37,7 @@ interface IeditEventArgs {
 }
 
 interface IdeleteEvent extends Action {
-  id: string
+  event_id: string
 }
 
 export function addEvent(name: string, time: Schema.EventTime, teacher: Schema.Teacher, room: Schema.Room, group: Schema.Group): IaddEvent {
@@ -81,6 +81,6 @@ export function editEvent(event: Schema.TeachEvent, args: IeditEventArgs ): Iedi
 export function deleteEvent(event: Schema.TeachEvent): IdeleteEvent {
   return {
     type: Type.DELETE_EVENT,
-    id: event.id
+    event_id: event.id
   }
 }

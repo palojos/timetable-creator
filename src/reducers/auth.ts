@@ -6,7 +6,7 @@ import { Schema } from '@app/store';
 import { Action, ActionType as Type } from '@app/actions';
 import assign from './assign';
 
-export function auth(state: Schema.Auth, action: Action): Schema.Auth {
+export function auth(state: Schema.Auth = {access_token: null}, action: Action): Schema.Auth {
   switch (action.type) {
     case Type.SET_AUTH_TOKEN:
       return  assign<Schema.Auth>(state)({

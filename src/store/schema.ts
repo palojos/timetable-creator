@@ -11,19 +11,17 @@ export interface Store {
 }
 
 export interface Entities {
-  teachers: {
-    [id: string]: Teacher;
-  }
-  rooms: {
-    [id: string]: Room;
-  }
-  groups: {
-    [id: string]: Group;
-  }
-  events: {
-    [id: string]: TeachEvent;
-  }
+  teachers: Teachers
+  rooms: Rooms
+  groups: Groups
+  events: Events
 }
+
+export type Events = {[id: string]: TeachEvent}
+export type Groups = {[id: string]: Group};
+export type Rooms = {[id: string]: Room};
+export type Teachers = {[id: string]: Teacher};
+
 
 export interface Teacher {
   id: EntityId;
@@ -63,7 +61,7 @@ export type EntityId = string;
 
 export type ParticipantType = "TEACHER" | "GROUP" | "ROOM";
 
-export const ParticipantType = {
+export const ParticipantType: {[propName: string]: ParticipantType} = {
   TEACHER: "TEACHER",
   GROUP: "GROUP",
   ROOM: "ROOM"

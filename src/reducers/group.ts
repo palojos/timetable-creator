@@ -8,11 +8,11 @@ import assign from './assign';
 
 import uuidv4 from 'uuid/v4';
 
-export function groups(state: {[id: string]: Schema.Group}, action: Action): {[id: string]: Schema.Group} {
+export function groups(state: Schema.Groups = {}, action: Action): Schema.Groups {
   switch (action.type) {
     case Type.ADD_GROUP:
       const id: Schema.EntityId = uuidv4();
-      return assign<{[id: string]: Schema.Group}>(state)({
+      return assign<Schema.Groups>(state)({
         id: {
           id,
           name: action.name,

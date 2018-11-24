@@ -8,11 +8,12 @@ import assign from './assign';
 
 import uuidv4 from 'uuid/v4';
 
-export function rooms(state: {[id: string]: Schema.Teacher}, action: Action): {[id: string]: Schema.Teacher} {
+export function teachers(state: Schema.Teachers = {}, action: Action): Schema.Teachers {
+
   switch (action.type) {
     case Type.ADD_TEACHER:
       const id: Schema.EntityId = uuidv4();
-      return assign<{[id: string]: Schema.Teacher}>(state)({
+      return assign<Schema.Teachers>(state)({
         id: {
           id,
           name: action.name,
