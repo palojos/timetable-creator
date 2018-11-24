@@ -7,3 +7,6 @@ export * from './room';
 
 //Export teacher action creators
 export * from './teacher';
+
+//Export grouå action creators
+export * from './group';
