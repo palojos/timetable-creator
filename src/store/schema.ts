@@ -72,3 +72,5 @@ export interface Auth {
 
 export type Bearer = "Bearer";
 export type Token = string | null;
+
+export const Bearer = "Bearer"
