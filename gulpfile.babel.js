@@ -29,7 +29,8 @@ export function build() {
     return bundler.bundle()
       .on('error', console.log)
       .pipe(source('bundle.js'))
-      .pipe(gulp.dest('./build/'));
+      .pipe(gulp.dest('./build/'))
+      .pipe(connect.reload());
   }
   bundler.on('update', taskFn);
   bundler.on('log', console.log)
