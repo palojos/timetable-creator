@@ -8,5 +8,8 @@ export * from './room';
 //Export teacher action creators
 export * from './teacher';
 
-//Export grouå action creators
+//Export group action creators
 export * from './group';
+
+//Export event action creators
+export * from './event';
