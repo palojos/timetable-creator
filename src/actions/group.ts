@@ -2,8 +2,7 @@
 Group actions
 */
 
-import { Action } from './actionConstants';
-import { ADD_GROUP } from './actionConstants';
+import { Action, ActionType as Type } from './actionConstants';
 
 interface IaddGroup extends Action {
   name: string,
@@ -12,7 +11,7 @@ interface IaddGroup extends Action {
 
 export function addGroup (name: string, size: number): IaddGroup {
   return {
-    type: ADD_GROUP,
+    type: Type.ADD_GROUP,
     name,
     size
   }

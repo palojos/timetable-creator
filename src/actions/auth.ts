@@ -3,8 +3,7 @@ Authentication actions
 */
 
 import { Schema } from '@app/store';
-import { Action } from './actionConstants';
-import { SET_AUTH_TOKEN, INVALIDATE_AUTH_TOKEN } from './actionConstants';
+import { Action, ActionType as Type } from './actionConstants';
 
 interface IsetAuthToken extends Action {
   token: Schema.Token;
@@ -14,7 +13,7 @@ interface IsetAuthToken extends Action {
 
 export function setAuthToken(token: Schema.Token, expires_in?: number): IsetAuthToken {
   return {
-    type: SET_AUTH_TOKEN,
+    type: Type.SET_AUTH_TOKEN,
     token,
     expires_in,
     bearer: Schema.Bearer
@@ -23,6 +22,6 @@ export function setAuthToken(token: Schema.Token, expires_in?: number): IsetAuth
 
 export function invalidateAuthToken(): Action {
   return {
-    type: INVALIDATE_AUTH_TOKEN
+    type: Type.INVALIDATE_AUTH_TOKEN
   }
 }

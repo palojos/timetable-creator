@@ -3,8 +3,7 @@ Teach event actions
 */
 
 import { Schema } from '@app/store';
-import { Action } from './actionConstants';
-import { ADD_EVENT, EDIT_EVENT, DELETE_EVENT } from './actionConstants';
+import { Action, ActionType as Type } from './actionConstants';
 
 interface IaddEvent extends Action {
   name: string;
@@ -43,7 +42,7 @@ interface IdeleteEvent extends Action {
 
 export function addEvent(name: string, time: Schema.EventTime, teacher: Schema.Teacher, room: Schema.Room, group: Schema.Group): IaddEvent {
   return {
-    type: ADD_EVENT,
+    type: Type.ADD_EVENT,
     name,
     time,
     participants: {
@@ -57,7 +56,7 @@ export function addEvent(name: string, time: Schema.EventTime, teacher: Schema.T
 export function editEvent(event: Schema.TeachEvent, args: IeditEventArgs ): IeditEvent {
   if (args.participants) {
     return {
-      type: EDIT_EVENT,
+      type: Type.EDIT_EVENT,
       event_id: event.id,
       name: args.name ? args.name : undefined,
       time: args.time ? args.time : undefined,
@@ -70,7 +69,7 @@ export function editEvent(event: Schema.TeachEvent, args: IeditEventArgs ): Iedi
   }
   else {
     return {
-      type: EDIT_EVENT,
+      type: Type.EDIT_EVENT,
       event_id: event.id,
       name: args.name ? args.name : undefined,
       time: args.time ? args.time : undefined,
@@ -81,7 +80,7 @@ export function editEvent(event: Schema.TeachEvent, args: IeditEventArgs ): Iedi
 
 export function deleteEvent(event: Schema.TeachEvent): IdeleteEvent {
   return {
-    type: DELETE_EVENT,
+    type: Type.DELETE_EVENT,
     id: event.id
   }
 }

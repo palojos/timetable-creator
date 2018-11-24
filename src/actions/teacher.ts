@@ -2,9 +2,7 @@
 Teacher actions
 */
 
-import { Schema } from '@app/store';
-import { Action } from './actionConstants';
-import { ADD_TEACHER } from './actionConstants';
+import { Action, ActionType as Type } from './actionConstants';
 
 interface IaddTeacher extends Action {
   name: string;
@@ -12,7 +10,7 @@ interface IaddTeacher extends Action {
 
 export function addTeacher(name: string): IaddTeacher {
   return {
-    type: ADD_TEACHER,
+    type: Type.ADD_TEACHER,
     name
   }
 }
