@@ -6,7 +6,9 @@ import { Schema } from '@app/store';
 import { Action } from './actionConstants';
 import { ADD_TEACHER } from './actionConstants';
 
-interface IaddTeacher extends Action, Schema.Teacher {}
+interface IaddTeacher extends Action {
+  name: string;
+}
 
 export function addTeacher(name: string): IaddTeacher {
   return {

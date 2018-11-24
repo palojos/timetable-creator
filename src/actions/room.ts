@@ -2,11 +2,13 @@
 Room actions
 */
 
-import { Schema } from '@app/store';
 import { Action } from './actionConstants';
 import { ADD_ROOM } from './actionConstants';
 
-interface IaddRoom extends Action, Schema.Room {}
+interface IaddRoom extends Action {
+  name: string;
+  capacity: number;
+}
 
 export function addRoom (name: string, capacity: number): IaddRoom {
   return {

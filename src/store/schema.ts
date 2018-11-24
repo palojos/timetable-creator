@@ -26,20 +26,24 @@ export interface Entities {
 }
 
 export interface Teacher {
+  id: EntityId;
   name: string;
 }
 
 export interface Room {
+  id: EntityId
   name: string;
   capacity: number;
 }
 
 export interface Group {
+  id: EntityId
   name: string;
   size: number;
 }
 
 export interface TeachEvent {
+  id: EntityId
   name: string;
   time: EventTime;
   participants: Participant[]
@@ -52,12 +56,14 @@ export interface EventTime {
 
 export interface Participant {
   type: ParticipantType;
-  id: string;
+  id: EntityId;
 }
+
+export type EntityId = string;
 
 export type ParticipantType = "TEACHER" | "GROUP" | "ROOM";
 
-export const participantTypes = {
+export const ParticipantType = {
   TEACHER: "TEACHER",
   GROUP: "GROUP",
   ROOM: "ROOM"
