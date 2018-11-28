@@ -1,10 +1,9 @@
 import React from 'react';
 
-interface IAppProps {}
 
 export class App extends React.Component {
 
-  constructor(props: IAppProps) {
+  constructor(props: {}) {
     super(props);
   }
 

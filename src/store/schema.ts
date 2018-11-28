@@ -8,60 +8,75 @@ import { Schema } from '@app/store'
 export interface Store {
   auth: Auth;
   entities: Entities;
+  resources: {
+    calendars: {
+      id: EntityId;
+      name: string;
+      description: string;
+      meta: {
+        ref: string;
+      }
+    }[]
+  }
+  filters: Filters;
+  status: {
+    teachers: {[id:string]: EntityState}
+    rooms: {[id:string]: EntityState}
+    groups: {[id:string]: EntityState}
+    events: {[id: string]: EntityState}
+  }
 }
 
 export interface Entities {
-  teachers: Teachers
-  rooms: Rooms
-  groups: Groups
-  events: Events
+  calendars: Calendars;
+  events: Events;
 }
 
+export type Calendars = {[id: string]: Calendar}
 export type Events = {[id: string]: TeachEvent}
-export type Groups = {[id: string]: Group};
-export type Rooms = {[id: string]: Room};
-export type Teachers = {[id: string]: Teacher};
 
-
-export interface Teacher {
+export interface Calendar {
   id: EntityId;
   name: string;
-}
-
-export interface Room {
-  id: EntityId
-  name: string;
-  capacity: number;
-}
-
-export interface Group {
-  id: EntityId
-  name: string;
-  size: number;
+  description: string;
+  meta: {
+    type: CalendarType;
+    tag: string;
+    ref: string;
+  }
+  reserved: ReservedEvent[];
 }
 
 export interface TeachEvent {
-  id: EntityId
-  name: string;
-  time: EventTime;
-  participants: Participant[]
-}
-
-export interface EventTime {
-  start: Date;
-  end: Date;
-}
-
-export interface Participant {
-  type: ParticipantType;
   id: EntityId;
+  name: string;
+  description: string;
+  meta: {
+    tag: string;
+    ref: string;
+  }
+  time: {
+    start: Date;
+    end: Date;
+  }
+  participants: EntityId[];
+}
+
+export interface ReservedEvent {
+  id: EntityId;
+  time: {
+    start: Date;
+    end: Date;
+  }
+  meta: {
+    ref: string;
+  }
 }
 
 export type EntityId = string;
+export type CalendarType = "TEACHER" | "GROUP" | "ROOM";
 
-export type ParticipantType = "TEACHER" | "GROUP" | "ROOM";
-
-export const ParticipantType: {[propName: string]: ParticipantType} = {
+export const CalendarType: {[propName: string]: CalendarType} = {
   TEACHER: "TEACHER",
   GROUP: "GROUP",
   ROOM: "ROOM"
@@ -70,11 +85,41 @@ export const ParticipantType: {[propName: string]: ParticipantType} = {
 export interface Auth {
   access_token: Token;
   acquired_time?: Date;
-  expires_in?: number | null;
+  expires_in?: number;
   type?: Bearer;
 }
 
 export type Bearer = "Bearer";
 export type Token = string | null;
 
-export const Bearer = "Bearer"
+export const Bearer = "Bearer";
+
+export interface Filters {
+  calendar: CalendarFilter[];
+  time: TimeFilter[];
+}
+
+export interface CalendarFilter {
+  type: CalendarFilterType;
+  entity?: EntityId;
+  calendarType?: CalendarType;
+}
+
+export type CalendarFilterType = "EXCLUDE" | "INCLUDE";
+
+export interface TimeFilter {
+  type: TimeFilterType;
+  time: Date;
+}
+
+export type TimeFilterType = "AFTER" | "BEFORE";
+
+export interface EntityState {
+  id: EntityId;
+  under_change: boolean;
+  valid: boolean;
+  status?: "CREATE" | "UPDATE" | "DELETE" | "FETCH";
+  tokens: {
+    fetch: string
+  }
+}
