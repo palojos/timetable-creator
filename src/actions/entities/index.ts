@@ -8,3 +8,4 @@ export function clearEntities(): I.ClearEntities {
 }
 
 export * from './calendar';
+export * from './events';

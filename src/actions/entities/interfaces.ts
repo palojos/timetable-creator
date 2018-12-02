@@ -6,34 +6,46 @@ export interface CreateCalendar extends Action {
   data: Schema.Calendar;
 }
 
-export interface CreateTeachEvent extends Action, Schema.TeachEvent {}
+export interface CreateTeachEvent extends Action {
+  key: Schema.EntityId;
+  data: Schema.TeachEvent;
+}
 
 export interface UpdateTeachEvent extends Action {
-  id: Schema.EntityId;
-  name?: string;
-  description?: string;
-  meta: {
-    tag?: string;
-    ref?: string;
-  }
-  time: {
-    start?: Date;
-    end?: Date;
-  }
+  key: Schema.EntityId;
+  data: {
+    id: Schema.EntityId;
+    name: string;
+    description: string;
+    time: {
+      start: Date;
+      end: Date;
+    },
+    meta: {
+      tag: string;
+    }
+  };
 }
 
 export interface DeleteTeachEvent extends Action {
-  id: Schema.EntityId;
+  key: Schema.EntityId;
 }
 export interface ClearEntities extends Action {}
 
 export interface UpdateTeachEventArgs {
-  name?: string;
-  description?: string;
-  meta?: {
-    type?: Schema.CalendarType;
-    tag?: string;
-    ref?: string;
-    size?: number;
+  name: string;
+  description: string;
+  time: {
+    start: Date;
+    end: Date;
   }
 }
+
+export interface SetParticipant extends Action {
+  key: Schema.EntityId;
+  data: {
+    participant: Schema.EntityId;
+  }
+}
+
+export interface RemoveParticipant extends SetParticipant {};

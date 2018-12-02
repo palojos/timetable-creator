@@ -59,6 +59,11 @@ export type ActionEventParticipants =
     "SET_PARTICIPANT"
   | "REMOVE_PARTICIPANT";
 
+export const ActionEventParticipants: {[key: string]: ActionEventParticipants} = {
+  SET_PARTICIPANT: "SET_PARTICIPANT",
+  REMOVE_PARTICIPANT: "REMOVE_PARTICIPANT"
+}
+
 export type ActionFilter =
     "SET_CALENDAR_FILTER"
   | "SET_TIME_FILTER"
@@ -76,7 +81,7 @@ export const ActionFilter: {[keý: string]: ActionFilter} = {
   CLEAR_CALENDAR_FILTERS: "CLEAR_CALENDAR_FILTERS"
 };
 
-export type ActionType = ActionApi | ActionAuth | ActionEntities | ActionFilter;
+export type ActionType = ActionApi | ActionAuth | ActionEntities | ActionFilter | ActionEventParticipants;
 
 export interface Action {
   type: ActionType;
