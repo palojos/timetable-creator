@@ -9,22 +9,10 @@ export interface Store {
   auth: Auth;
   entities: Entities;
   resources: {
-    calendars: {
-      id: EntityId;
-      name: string;
-      description: string;
-      meta: {
-        ref: string;
-      }
-    }[]
+    calendars: CalendarResource[];
   }
   filters: Filters;
-  status: {
-    teachers: {[id:string]: EntityState}
-    rooms: {[id:string]: EntityState}
-    groups: {[id:string]: EntityState}
-    events: {[id: string]: EntityState}
-  }
+  status: Status;
 }
 
 export interface Entities {
@@ -43,6 +31,7 @@ export interface Calendar {
     type: CalendarType;
     tag: string;
     ref: string;
+    size?: number;
   }
   reserved: ReservedEvent[];
 }
@@ -114,12 +103,36 @@ export interface TimeFilter {
 
 export type TimeFilterType = "AFTER" | "BEFORE";
 
-export interface EntityState {
+export interface Status {
+    teachers: {[id:string]: EntityStatus}
+    rooms: {[id:string]: EntityStatus}
+    groups: {[id:string]: EntityStatus}
+    events: {[id: string]: EntityStatus}
+    resources: {[id: string]: EntityStatus}
+    global: {
+      fetching: boolean;
+    }
+  }
+
+export interface EntityStatus {
   id: EntityId;
-  under_change: boolean;
   valid: boolean;
   status?: "CREATE" | "UPDATE" | "DELETE" | "FETCH";
   tokens: {
-    fetch: string
+    api: string;
+  }
+  lastUpdate: number;
+}
+
+export interface GlobalStatus {
+  isFetching: boolean;
+}
+
+export interface CalendarResource {
+  id: EntityId;
+  name: string;
+  description: string;
+  meta: {
+    ref: string;
   }
 }

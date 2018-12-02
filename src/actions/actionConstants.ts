@@ -3,25 +3,25 @@ All defined actions in application
 */
 
 export type ActionApi =
-    "FETCH_CALENDARS"          // Fetch calendars from server
-  | "FETCH_CALENDARS_SUCCESS"  // Successfully fetched calendar
-  | "FETCH_CALENDARS_ERROR"    // Error in fetching
-  | "FETCH_EVENTS"             // Fetch events for particular calendar
-  | "FETCH_EVENTS_SUCCESS"     // Successfully fetched events
-  | "FETCH_EVENTS_ERROR"       // Failure in fetching of events
-  | "CREATE_CALENDAR"          // Create new calendar to server
-  | "CREATE_CALENDAR_SUCCESS"
-  | "CREATE_CALENDAR_ERROR"
+    "GET_CALENDARS"          // Fetch calendars from server
+  | "GET_CALENDARS_SUCCESS"  // Successfully fetched calendar
+  | "GET_CALENDARS_ERROR"    // Error in fetching
+  | "GET_EVENTS"             // Fetch events for particular calendar
+  | "GET_EVENTS_SUCCESS"     // Successfully fetched events
+  | "GET_EVENTS_ERROR"       // Failure in fetching of events
+  | "POST_CALENDAR"          // Create new calendar to server
+  | "POST_CALENDAR_SUCCESS"
+  | "POST_CALENDAR_ERROR"
   | "UPDATE_CALENDAR"
-  | "UPDATE_CALEDNAR_SUCCESS"
+  | "UPDATE_CALENDAR_SUCCESS"
   | "UPDATE_CALENDAR_ERROR"
-  | "CREATE_EVENT"
-  | "CREATE_EVENT_SUCCESS"
-  | "CREATE_EVENT_ERROR"
+  | "POST_EVENT"
+  | "POST_EVENT_SUCCESS"
+  | "POST_EVENT_ERROR"
   | "UPDATE_EVENT"
   | "UPDATE_EVENT_SUCCESS"
   | "UPDATE_EVENT_ERROR"
-  | "DELETE"
+  | "DELETE_EVENT"
   | "DELETE_EVENT_SUCCESS"
   | "DELETE_EVENT_ERROR";
 
@@ -35,26 +35,29 @@ export type ActionAuth =
   | "LOGIN"                         // Start login process, redirect browser to /login url
   | "ACQUIRE_TOKEN";                // Acquire token from url or local store
 
-export type ActionApp =
-    "CREATE_TEACHER"
-  | "CREATE_TEACHER_SUCCESS"
-  | "CREATE_TEACHER_ERROR"
-  | "CREATE_GROUP"
-  | "CREATE_GROUP_SUCCESS"
-  | "CREATE_GROUP_ERROR"
-  | "CREATE_ROOM"
-  | "CREATE_ROOM_SUCCESS"
-  | "CREATE_ROOM_ERROR"
+export type ActionEntities =
+    "CREATE_CALENDAR"
   | "CREATE_TEACH_EVENT"
-  | "CREATE_TEACH_EVENT_SUCCESS"
-  | "CREATE_TEACH_EVENT_ERROR"
   | "UPDATE_TEACH_EVENT"
-  | "UPDATE_TEACH_EVENT_SUCCES"
-  | "UPDATE_TEACH_EVENT_ERROR"
   | "DELETE_TEACH_EVENT"
-  | "DELETE_TEACH_EVENT_SUCCESS"
-  | "DELETE_TEACH_EVENT_ERROR"
-  | "UPDATE_INVALID_ENTITIES";
+  | "CLEAR_ENTITIES";
+
+export const ActionEntities: {[key: string]: ActionEntities} = {
+  CREATE_CALENDAR: "CREATE_CALENDAR",
+  CREATE_TEACH_EVENT: "CREATE_TEACH_EVENT",
+  UPDATE_TEACH_EVENT: "UPDATE_TEACH_EVENT",
+  DELETE_TEACH_EVENT: "DELETE_TEACH_EVENT",
+  CLEAR_ENTITIES: "CLEAR_ENTITIES"
+}
+
+export type ActionReservedEvents =
+    "SET_RESERVED_EVENT"
+  | "REMOVE_RESERVED_EVENT"
+  | "CLEAR_RESERVED_EVENTS";
+
+export type ActionEventParticipants =
+    "SET_PARTICIPANT"
+  | "REMOVE_PARTICIPANT";
 
 export type ActionFilter =
     "SET_CALENDAR_FILTER"
@@ -62,7 +65,7 @@ export type ActionFilter =
   | "REMOVE_CALENDAR_FILTER"
   | "REMOVE_TIME_FILTER"
   | "CLEAR_CALENDAR_FILTERS"
-  | "CLEAR_TIME_FILTERS"
+  | "CLEAR_TIME_FILTERS";
 
 export const ActionFilter: {[keý: string]: ActionFilter} = {
   SET_CALENDAR_FILTER: "SET_CALENDAR_FILTER",
@@ -71,9 +74,9 @@ export const ActionFilter: {[keý: string]: ActionFilter} = {
   REMOVE_TIME_FILTER: "REMOVE_TIME_FILTER",
   CLEAR_TIME_FILTERS: "CLEAR_TIME_FILTERS",
   CLEAR_CALENDAR_FILTERS: "CLEAR_CALENDAR_FILTERS"
-}
+};
 
-export type ActionType = ActionApi | ActionAuth | ActionApp | ActionFilter;
+export type ActionType = ActionApi | ActionAuth | ActionEntities | ActionFilter;
 
 export interface Action {
   type: ActionType;
