@@ -8,9 +8,7 @@ import { Schema } from '@app/store'
 export interface Store {
   auth: Auth;
   entities: Entities;
-  resources: {
-    calendars: CalendarResource[];
-  }
+  resources: Resources
   filters: Filters;
   status: Status;
 }
@@ -126,6 +124,10 @@ export interface EntityStatus {
 
 export interface GlobalStatus {
   isFetching: boolean;
+}
+
+export interface Resources {
+  calendars: CalendarResource[];
 }
 
 export interface CalendarResource {

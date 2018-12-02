@@ -17,7 +17,7 @@ export function build() {
 
   const bundler = browserify({
     debug: true,
-    entries: './src/index.ts',
+    entries: './src/index.tsx',
     cache: {},
     packageCache: {},
   })

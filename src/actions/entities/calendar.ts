@@ -23,7 +23,7 @@ export function createGroup( name: string, size: number) {
 function createCalendar(name: string, type: Schema.CalendarType, size?: number): (dispatch: any) => any {
   return function(dispatch) {
     const id: Schema.EntityId = uuidv4();
-    const tag = join('-')(size ? ["timetable-creator:[", type, name, id, size, ']'] : ['timetable-creator:[', type, name, id, ']']);
+    const tag = 'timetable-creator:[' + join('|')(size ? [ type, name, id, size] : [type, name, id, ]) + ']';
     const calendar: Schema.Calendar = {
       id,
       name,

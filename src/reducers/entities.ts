@@ -6,7 +6,7 @@ import { combineReducers } from 'redux';
 import assign from '@app/reducers/assign';
 
 
-function calendars(state: Schema.Calendars = {}, action: Action): Schmea.Calendars {
+function calendars(state: Schema.Calendars = {}, action: Action): Schema.Calendars {
   switch (action.type) {
     case ActionEntities.CREATE_CALENDAR:
       return assign<Schema.Calendars>(state)({[action.key]: action.data});
@@ -29,7 +29,7 @@ function events(state: Schema.Events = {}, action: Action): Schema.Events {
   }
 }
 
-export const entities = combineReducers({
+export default combineReducers({
   calendars,
   events
 })

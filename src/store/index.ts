@@ -2,12 +2,17 @@
 //Exporting store schema under Schema namespace
 import * as Schema from './schema'; export { Schema };
 
-import { createStore } from 'redux';
-import { rootReducer } from '@app/reducers';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import * as reducers from '@app/reducers';
+
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
 // Exporting store configuration function
 export function configureStore() {
-  const store = createStore(rootReducer);
+  const middleware = applyMiddleware(thunk, logger);
+  const rootReducer = combineReducers(reducers);
+  const store = createStore(rootReducer, middleware);
 
   return store;
 }

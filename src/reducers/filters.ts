@@ -57,7 +57,7 @@ function time(state: Schema.TimeFilter[] = [], action: Action): Schema.TimeFilte
   }
 }
 
-export const filters = combineReducers({
+export default combineReducers({
   calendar,
   time
 })

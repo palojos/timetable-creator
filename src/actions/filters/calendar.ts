@@ -44,7 +44,7 @@ export function removeIncludeFilter(calendar: Schema.EntityId): I.RemoveCalendar
 
 export function removeTypeIncludeFilter(calendarType: Schema.CalendarType): I.RemoveCalendarFilter {
   return {
-    type: ActionFilter.REMOVE_CALENDAR_FILTER¨,
+    type: ActionFilter.REMOVE_CALENDAR_FILTER,
     filterType: "INCLUDE",
     calendarType
   }

@@ -1,5 +1,4 @@
 import * as I from './interfaces';
-import { Schema } from '@app/store';
 import { ActionFilter } from '@app/actions/actionConstants';
 
 export function createAfterFilter(time: Date): I.SetTimeFilter {
