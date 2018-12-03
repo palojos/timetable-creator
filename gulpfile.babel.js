@@ -26,14 +26,17 @@ export function build() {
   .transform(babelify, {"extensions": [".ts", ".tsx"]} );
 
   const taskFn = () => {
-    return bundler.bundle()
-      .on('error', console.log)
+    let stream = bundler.bundle()
+    return stream
+      .on('error', err => {
+        console.log(err.message);
+      })
       .pipe(source('bundle.js'))
       .pipe(gulp.dest('./build/'))
       .pipe(connect.reload());
   }
   bundler.on('update', taskFn);
-  bundler.on('log', console.log)
+  bundler.on('log', console.log);
   taskFn();
 }
 
@@ -42,7 +45,8 @@ function server() {
     name: 'Test app',
     root: ['public', 'build'],
     port: 3000,
-    livereload: true
+    livereload: true,
+    fallback: 'public/index.html'
   });
 }
 

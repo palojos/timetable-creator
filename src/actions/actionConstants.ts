@@ -32,7 +32,7 @@ export type ActionAuth =
   | "VALIDATE_AUTH_TOKEN"           // Start authentication validation process
   | "VALIDATE_AUTH_TOKEN_SUCCESS"   // Successfully
   | "VALIDATE_AUTH_TOKEN_FAILURE"   // Auth token validation failed
-  | "LOGIN"                         // Start login process, redirect browser to /login url
+  | "LOGIN"                         // Start login process, redirect browser to /auth/login url
   | "ACQUIRE_TOKEN";                // Acquire token from url or local store
 
 export type ActionEntities =
@@ -72,7 +72,7 @@ export type ActionFilter =
   | "CLEAR_CALENDAR_FILTERS"
   | "CLEAR_TIME_FILTERS";
 
-export const ActionFilter: {[keý: string]: ActionFilter} = {
+export const ActionFilter: {[key: string]: ActionFilter} = {
   SET_CALENDAR_FILTER: "SET_CALENDAR_FILTER",
   SET_TIME_FILTER: "SET_TIME_FILTER",
   REMOVE_CALENDAR_FILTER: "REMOVE_CALENDAR_FILTER",
@@ -81,7 +81,24 @@ export const ActionFilter: {[keý: string]: ActionFilter} = {
   CLEAR_CALENDAR_FILTERS: "CLEAR_CALENDAR_FILTERS"
 };
 
-export type ActionType = ActionApi | ActionAuth | ActionEntities | ActionFilter | ActionEventParticipants;
+export type ActionResource =
+    "CREATE_CALENDAR_RESOURCE"
+  | "CLEAR_RESOURCES"
+  | "REMOVE_CALENDAR_RESOURCE"
+
+export const ActionResource: {[key: string]: ActionResource} = {
+  CREATE_CALENDAR_RESOURCE: "CREATE_CALENDAR_RESOURCE",
+  CLEAR_RESOURCES: "CLEAR_RESOURCES",
+  REMOVE_CALENDAR_RESOURCE: "REMOVE_CALENDAR_RESOURCE"
+}
+
+export type ActionType =
+    ActionApi
+  | ActionAuth
+  | ActionEntities
+  | ActionFilter
+  | ActionEventParticipants
+  | ActionResource;
 
 export interface Action {
   type: ActionType;

@@ -1,43 +1,24 @@
 import React from 'react';
+import { Switch, Route } from 'react-router';
 
-import { connect } from 'react-redux';
-import { entities } from '@app/actions';
+import { Dashboard } from '@app/components/dashboard';
 
-type Dispatcher = (action: any) => any
+import { CalendarForm } from '@app/components/forms';
 
-let AppRenderer = ({dispatch}:{dispatch:Dispatcher}) => {
-
-  const roomClick = () => dispatch(entities.createRoom("Room1", 10))
-  const clearClick = () => dispatch(entities.clearEntities());
-  return (
-    <div>
-      <h1>
-        App
-      </h1>
-
-      <button
-        onClick={roomClick}
-      >
-      Room
-      </button>
-      <button
-        onClick={dispatch(entities.createGroup("Group1", 10))}
-      >
-      Group
-      </button>
-      <button
-        onClick={dispatch(entities.createTeacher("Teacher1"))}
-      >
-      Teacher
-      </button>
-      <button onClick={clearClick}>
-        Clear
-      </button>
-    </div>
-
+export let App = () => {
+  return(
+    <Switch>
+      <Route exact path='/' component={Dashboard} />
+      {
+      //<Route exact path='/' component={Home} />
+      //<Route path='/auth/login' component={AuthForm} />
+      //<Route path='/auth/login/success' component={AuthHandler} />
+      }
+      <Route path='/create/calendar/:type' component={CalendarForm} />
+      {
+      //<Route path='/create/event' component={EventForm} />
+      //<Route path='/update/event/:event_id' component={EventForm} />
+      }
+    </Switch>
   );
 }
-
-let App = connect()(AppRenderer);
-
-export default App;
