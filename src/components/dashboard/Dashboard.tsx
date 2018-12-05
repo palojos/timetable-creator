@@ -19,22 +19,23 @@ export class Dashboard extends React.Component {
         <Link to="/create/calendar/room">Create Room </Link>
         <Link to="/create/calendar/group">Create Group</Link>
 
+        <h2>Calendars</h2>
         <div>
-          <h2>Teachers</h2>
+          <h3>Teachers</h3>
           <VisibleCalendarList
             calendarType={Schema.CalendarType.TEACHER}
           />
         </div>
 
         <div>
-          <h2>Groups</h2>
+          <h3>Groups</h3>
           <VisibleCalendarList
             calendarType={Schema.CalendarType.GROUP}
           />
         </div>
 
         <div>
-          <h2>Rooms</h2>
+          <h3>Rooms</h3>
           <VisibleCalendarList
             calendarType={Schema.CalendarType.ROOM}
           />
