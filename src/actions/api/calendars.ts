@@ -11,8 +11,6 @@ export function getCalendarList(nextPageToken?: string, nextSyncToken?: string):
 
     const nonce = uuidv4();
 
-    console.log("tissit");
-
     dispatch({
       type: ActionApi.GET_CALENDAR_LIST,
       key: nonce,
@@ -21,7 +19,7 @@ export function getCalendarList(nextPageToken?: string, nextSyncToken?: string):
         hasPageToken: nextPageToken != undefined,
         hasSyncToken: nextSyncToken != undefined
       }
-    })
+    });
 
     let params : {
       showHidden: boolean

@@ -8,8 +8,6 @@ export const LogoutHandler = () => {
   window.localStorage['gapi:expires_in'] = "";
   window.localStorage['gapi:acquired_at'] = "";
 
-  console.log(window.localStorage)
-
   return (
     <Redirect to="/" />
   );
