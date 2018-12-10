@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Schema } from '@app/store';
 import { entities } from '@app/actions';
 
-import { flow, lowerCase, upperFirst } from 'lodash/fp';
+import {lowerCase, upperFirst, flow} from 'lodash/fp';
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
@@ -85,6 +85,8 @@ class CreateCalendarForm extends React.Component <CreateCalendarFormProps, Creat
 
   render() {
 
+   let strconv = flow(lowerCase, upperFirst);
+
     const SizeInput = (
       <label>
         Size:
@@ -94,7 +96,7 @@ class CreateCalendarForm extends React.Component <CreateCalendarFormProps, Creat
     return(
       <form onSubmit={this.handleSubmit}>
         <label>
-          {flow(lowerCase,upperFirst)(this.state.type)} name:
+          {strconv(this.state.type)} name:
           <input type="text" value={this.state.name} onChange={this.handleNameChange} />
         </label>
         {this.state.size != undefined ? SizeInput : null}
