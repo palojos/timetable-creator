@@ -25,16 +25,6 @@ export type ActionApi =
   | "DELETE_EVENT_SUCCESS"
   | "DELETE_EVENT_ERROR";
 
-export type ActionAuth =
-    "AUTH"                          // Starts authentication process
-  | "AUTH_SUCCESS"                  // Authentication ended successfully
-  | "AUTH_ERROR"                    // Authentication end to error
-  | "VALIDATE_AUTH_TOKEN"           // Start authentication validation process
-  | "VALIDATE_AUTH_TOKEN_SUCCESS"   // Successfully
-  | "VALIDATE_AUTH_TOKEN_FAILURE"   // Auth token validation failed
-  | "LOGIN"                         // Start login process, redirect browser to /auth/login url
-  | "ACQUIRE_TOKEN";                // Acquire token from url or local store
-
 export type ActionEntities =
     "CREATE_CALENDAR"
   | "CREATE_TEACH_EVENT"
@@ -94,7 +84,6 @@ export const ActionResource: {[key: string]: ActionResource} = {
 
 export type ActionType =
     ActionApi
-  | ActionAuth
   | ActionEntities
   | ActionFilter
   | ActionEventParticipants

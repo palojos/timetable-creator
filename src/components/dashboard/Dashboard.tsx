@@ -40,6 +40,10 @@ export class Dashboard extends React.Component {
           />
         </div>
 
+        <div>
+          <Link to="/auth/logout"> Logout </Link>
+        </div>
+
       </div>
     );
   }

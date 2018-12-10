@@ -6,7 +6,6 @@ import { Schema } from '@app/store'
 */
 
 export interface Store {
-  auth: Auth;
   entities: Entities;
   resources: Resources
   filters: Filters;

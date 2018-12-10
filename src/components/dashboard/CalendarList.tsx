@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { filter, values, sortBy, flow, map  } from 'lodash/fp';
 
 import { Schema } from '@app/store';
+//import { filters } from '@app/actions';
 
 const mapStateToProps = (state: Schema.Store) => {
   return {
@@ -10,6 +11,17 @@ const mapStateToProps = (state: Schema.Store) => {
     filter: state.filters.calendar
   }
 }
+
+/*const mapDispatchToProps = (dispatch: any) => {
+  return {
+    setCalendarFilter: (calendar: Schema.EntityId) => {
+      dispatch(filters.calendar.createIncludeFilter(calendar));
+    },
+    removeCalendarFilter: (calendar: Schema.EntityId) => {
+      dispatch(filters.calendar.removeIncludeFilter(calendar));
+    }
+  }
+}*/
 
 interface CalendarListProps {
   calendars: Schema.Calendar[];
@@ -24,7 +36,6 @@ class CalendarList extends React.Component <CalendarListProps, {}> {
       return c.meta.type == this.props.calendarType
     }),
     map((c: Schema.Calendar) => {
-      c
       return (
         <CalendarListItem
           key={c.id}
@@ -50,6 +61,10 @@ const CalendarListItem = (props: CalendarListItemProps) => {
   return (
     <li>
       { props.name }
+      <form>
+        <input type="radio" name="filter" value="show"/>
+        <input type="radio" name="filter" value="exlude"/>
+      </form>
     </li>
   );
 }
