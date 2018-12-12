@@ -17,6 +17,8 @@ export const LoginHandler = () => {
 
   const nonce = window.localStorage['login:nonce'];
 
+
+
   if( !params.error && nonce == params.state) {
     window.localStorage['gapi:token'] = params['access_token'];
     window.localStorage['gapi:expires_in'] = params['expires_in'];

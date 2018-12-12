@@ -27,10 +27,8 @@ export interface Calendar {
   meta: {
     type: CalendarType;
     tag: string;
-    ref: string;
     size?: number;
   }
-  reserved: ReservedEvent[];
 }
 
 export interface TeachEvent {
@@ -46,17 +44,6 @@ export interface TeachEvent {
     end: Date;
   }
   participants: EntityId[];
-}
-
-export interface ReservedEvent {
-  id: EntityId;
-  time: {
-    start: Date;
-    end: Date;
-  }
-  meta: {
-    ref: string;
-  }
 }
 
 export type EntityId = string;

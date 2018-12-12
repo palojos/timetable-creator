@@ -1,8 +1,9 @@
+import '@babel/polyfill';
 import * as I from './interfaces';
 import { Schema } from '@app/store';
-import { Action, ActionEntities } from '@app/actions';
+import { Action, ActionEntities, api } from '@app/actions';
+import { to } from '@app/actions/util';
 
-import uuidv4 from 'uuid/v4';
 import { Dispatch } from 'redux';
 
 import { join } from 'lodash/fp';
@@ -21,22 +22,39 @@ export function createGroup( name: string, size: number) {
 
 }
 
-export function createCalendar(name: string, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => void {
-  return function(dispatch) {
-    const id: Schema.EntityId = uuidv4();
-    const tag = 'timetable-creator:[' + join('|')(size ? [ type, name, id, size] : [type, name, id, ]) + ']';
+export function createCalendar(name: string, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
+
+  return async function(dispatch) {
+
+    dispatch({
+      type: 'NULL'
+    });
+
+    let data, err;
+
+    [data, err] = await to(api.postCalendar(name, dispatch));
+
+    if(err) return
+
+    let id = data.id
+    let tag = 'timetable-creator:' + join(':')(size ? [ type, name, size] : [type, name]);
+    let description = tag;
     const calendar: Schema.Calendar = {
       id,
       name,
-      description: "",
+      description,
       meta: {
         type,
         tag,
-        ref: "null",
         size
-      },
-      reserved: []
+      }
     };
+
+    console.log(calendar);
+
+    [data, err] = await to(api.putCalendar(id, data.summary, description, dispatch));
+
+    if(err) return
 
     const action : I.CreateCalendar = {
       type: ActionEntities.CREATE_CALENDAR,
@@ -45,6 +63,7 @@ export function createCalendar(name: string, type: Schema.CalendarType, size?: n
     };
 
     dispatch(action);
+
   }
 }
 

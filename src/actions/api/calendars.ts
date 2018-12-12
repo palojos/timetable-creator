@@ -1,7 +1,6 @@
 import { Schema } from '@app/store';
 import { ActionApi, Action } from '@app/actions';
 import { Dispatch } from 'redux';
-import '@babel/polyfill';
 import { client, to } from '@app/actions/util';
 import uuidv4 from 'uuid/v4';
 
@@ -14,7 +13,7 @@ export interface CalendarApiAction extends Action {
 }
 
 export interface CalendarApiError extends CalendarApiAction {
-  statusCode: string;
+  statusCode: number;
 }
 
 export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: string, nextSyncToken?: string) {
