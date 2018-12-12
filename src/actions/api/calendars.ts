@@ -1,26 +1,25 @@
 import { Schema } from '@app/store';
-import { ActionApi } from '@app/actions';
+import { ActionApi, Action } from '@app/actions';
 import { Dispatch } from 'redux';
-import fetch from './fetch';
-
+import '@babel/polyfill';
+import { client, to } from '@app/actions/util';
 import uuidv4 from 'uuid/v4';
 
-export function getCalendarList(nextPageToken?: string, nextSyncToken?: string): any {
+export interface CalendarApiAction extends Action {
+  key: Schema.EntityId;
+  flags?: {
+    [key: string]: boolean;
+  }
+  ref?: Schema.EntityId
+}
 
-  return (dispatch: any) => {
+export interface CalendarApiError extends CalendarApiAction {
+  statusCode: string;
+}
 
-    const nonce = uuidv4();
+export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: string, nextSyncToken?: string) {
 
-    dispatch({
-      type: ActionApi.GET_CALENDAR_LIST,
-      key: nonce,
-      data: {
-        id: nonce,
-        hasPageToken: nextPageToken != undefined,
-        hasSyncToken: nextSyncToken != undefined
-      }
-    });
-
+  const get = () => {
     let params : {
       showHidden: boolean
       minAccessRole?: string
@@ -35,153 +34,182 @@ export function getCalendarList(nextPageToken?: string, nextSyncToken?: string):
     }
 
     if (nextSyncToken) {
-      params.syncToken = nextSyncToken
+      params.syncToken = nextSyncToken;
     }
 
     else {
-      params.minAccessRole = "writer"
+      params.minAccessRole = "writer";
     }
 
-    return fetch.request({
+    return client.request({
       method: 'get',
       url: '/calendar/v3/users/me/calendarList',
-      params
-    }).then( (resp) => {
-      dispatch({
-        type: ActionApi.GET_CALENDAR_LIST_SUCCESS,
-        key: nonce,
-        data: {
-          id: nonce,
-          items: resp.data.items,
-          syncToken: resp.data.nextSyncToken
-        },
-        ref: nonce
-      });
-      if (resp.data.nextPageToken) {
-        dispatch(getCalendarList(resp.data.nextPageToken))
-      }
-
-    }).catch( (err) => {
-      dispatch({
-        type: ActionApi.GET_CALENDAR_LIST_ERROR,
-        key: nonce,
-        statusCode: err.response.status
-      });
+      params,
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
     });
   }
-}
 
-export function getCalendar(id: Schema.EntityId): (dispatch: Dispatch<any>) => void {
+  const nonce = uuidv4();
+  const hasPageToken = nextPageToken != undefined;
+  const hasSyncToken = nextSyncToken != undefined;
 
-  return (dispatch) => {
+  dispatch({
+    type: ActionApi.GET_CALENDAR_LIST,
+    key: nonce,
+    flags: {
+      hasPageToken,
+      hasSyncToken
+    }
+  });
+
+  let resp, err;
+
+  [resp, err] = await to(get());
+
+  if(err) {
     dispatch({
-      type: ActionApi.GET_CALENDAR,
-      key: id,
-      data: {
-        id
-      }
-    })
-
-    return fetch.request({
-      method: 'get',
-      url: '/calendar/v3/calendars/' + id
-    }).then( (resp) => {
-      dispatch({
-        type: ActionApi.GET_CALENDAR_SUCCESS,
-        key: resp.data.id,
-        data: {
-          id: resp.data.id,
-          name: resp.data.summary,
-          description: resp.data.description
-        },
-        ref: id
-      });
-    }).catch( (err) => {
-      dispatch({
-        type: ActionApi.GET_CALENDAR_ERROR,
-        key: id,
-        statusCode: err.response.status
-      });
-    });
-  }
-}
-
-export function postCalendar(name: string): (dispatch: Dispatch<any>) => void {
-
-  return (dispatch) => {
-
-    const nonce = uuidv4();
-
-    dispatch({
-      type: ActionApi.POST_CALENDAR,
+      type: ActionApi.GET_CALENDAR_LIST_ERROR,
       key: nonce,
-      data: {
-        id: nonce
+      statusCode: err.response.status,
+      flags: {
+        hasSyncToken,
+        hasPageToken
       }
     });
+    return Promise.reject(err);
+  }
 
-    return fetch.request({
+  else {
+    dispatch({
+      type: ActionApi.GET_CALENDAR_LIST_SUCCESS,
+      key: nonce,
+      flags: {
+        hasSyncToken,
+        hasPageToken
+      }
+    });
+    return Promise.resolve(resp.data)
+  }
+}
+
+export async function getCalendar(id: Schema.EntityId, dispatch: Dispatch<any>) {
+
+  const get = () => {
+    return client.request({
+      method: 'get',
+      url: '/calendar/v3/calendars/' + id,
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
+    });
+  }
+
+  dispatch({
+    type: ActionApi.GET_CALENDAR,
+    key: id
+  });
+
+  let resp, err;
+
+  [resp, err] = await to(get());
+
+  if(err) {
+    dispatch({
+      type: ActionApi.GET_CALENDAR_ERROR,
+      statusCode: err.response.status,
+      key: id
+    });
+    return Promise.reject(err);
+  }
+
+  else {
+    dispatch({
+      type:ActionApi.GET_CALENDAR_SUCCESS,
+      key: resp.data.id
+    });
+    return Promise.resolve(resp.data);
+  }
+}
+
+export async function postCalendar(name: string, dispatch: Dispatch<any>) {
+
+  const post = () => {
+    return client.request({
       method: 'post',
       url: '/calendar/v3/calendars',
       data: {
         summary: name
-      }
-    }).then( (resp) => {
-      dispatch({
-        type: ActionApi.POST_CALENDAR_SUCCESS,
-        key: resp.data.id,
-        data: {
-          id: resp.data.id,
-          name: resp.data.summary,
-          description: resp.data.description
-        },
-        ref: nonce
-      });
-    }).catch( (err) => {
-      dispatch({
-        type: ActionApi.POST_CALENDAR_ERROR,
-        statusCode: err.response.status,
-        key: nonce
-      });
+      },
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
     });
+  }
+
+  const nonce = uuidv4();
+
+  dispatch({
+    type: ActionApi.POST_CALENDAR,
+    key: nonce
+  });
+
+  let resp, err;
+
+  [resp, err] = await to(post());
+
+  if(err) {
+    dispatch({
+      type: ActionApi.POST_CALENDAR_ERROR,
+      statusCode: err.response.status,
+      key: nonce
+    });
+    return Promise.reject(err);
+  }
+
+  else {
+    dispatch({
+      type: ActionApi.POST_CALENDAR_SUCCESS,
+      key: resp.data.id,
+      ref: nonce
+    });
+    return Promise.resolve(resp.data);
   }
 }
 
-export function putCalendar(id: Schema.EntityId, description: string): (dispatch: Dispatch<any>) => void {
+export async function putCalendar(id: Schema.EntityId, name: string, description: string, dispatch: Dispatch<any>) {
 
-  return (dispatch) => {
-
-    dispatch({
-      type: ActionApi.PUT_CALENDAR,
-      key: id,
-      data: {
-        id
-      }
-    });
-
-    return fetch.request({
+  const put = () => {
+    return client.request( {
       method: 'put',
-      url: '/calendar/v3/calendars' + id,
+      url: '/calendar/v3/calendars/' + id,
       data: {
-        description
-      }
-    }).then( (resp) => {
-      dispatch({
-        type: ActionApi.PUT_CALENDAR_SUCCESS,
-        key: resp.data.id,
-        data: {
-          id: resp.data.id,
-          name: resp.data.summary,
-          description: resp.data.description
-        },
-        ref: id
-      });
-    }).catch( (err) => {
-      dispatch({
-        type: ActionApi.PUT_CALENDAR_ERROR,
-        key: id,
-        statusCode: err.response.status
-      })
-    })
+        description,
+        summary: name,
+        timeZone: "Europe/Helsinki"
+      },
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
+    });
+  }
+
+  dispatch({
+    type: ActionApi.PUT_CALENDAR,
+    key: id
+  });
+
+  let resp, err;
+
+  [resp, err] = await to(put());
+
+  if(err) {
+    dispatch({
+      type: ActionApi.PUT_CALENDAR_ERROR,
+      statusCode: err.response.status,
+      key: id
+    });
+    return Promise.reject(err)
+  }
+
+  else {
+    dispatch({
+      type: ActionApi.PUT_CALENDAR_SUCCESS,
+      key: resp.data.id
+    });
+    return Promise.resolve(resp.data);
   }
 }
