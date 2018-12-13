@@ -33,7 +33,6 @@ function events(state: Schema.Events = {}, action: Action): Schema.Events {
       prev = state[action.key];
       event = action.data;
       event.participants = prev.participants;
-      event.meta.ref = prev.meta.ref;
 
       return assign(state)({[action.key]:event});
 

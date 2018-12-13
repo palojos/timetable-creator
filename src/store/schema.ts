@@ -112,8 +112,10 @@ export interface GlobalStatus {
 }
 
 export interface Resources {
-  calendars: CalendarResource[];
+  calendars: CalendarResources;
 }
+
+export type CalendarResources = {[key: string]: CalendarResource}
 
 export interface CalendarResource {
   id: EntityId;
