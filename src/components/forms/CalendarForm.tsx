@@ -29,7 +29,7 @@ interface CreateCalendarFormState {
 
 interface CreateCalendarFormProps {
   onCreateCalendar: (name: string, type: Schema.CalendarType, size?: number) => void;
-  calendarResources: Schema.CalendarResource[];
+  calendarResources: Schema.CalendarResources;
   match: any;
   history: any;
 }

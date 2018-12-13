@@ -18,3 +18,5 @@ render(
   </Provider>,
   document.getElementById('react-root')
 );
+
+export { store };

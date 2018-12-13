@@ -87,20 +87,6 @@ interface CalendarListItemState {
   selected: boolean;
 }
 
-/*
-const CalendarListItem = (props: CalendarListItemProps) => {
-  return (
-    <li>
-      { props.name }
-      <form>
-        <input type="radio" name="filter" value="show"/>
-        <input type="radio" name="filter" value="exlude"/>
-      </form>
-    </li>
-  );
-}
-*/
-
 class CalendarListItem extends React.Component <CalendarListItemProps, CalendarListItemState> {
 
   constructor(props: CalendarListItemProps) {

@@ -1,5 +1,4 @@
 import '@babel/polyfill';
-import * as I from './interfaces';
 import { Schema } from '@app/store';
 import { Action, ActionEntities, ActionResource, api } from '@app/actions';
 import { to } from '@app/actions/util';
@@ -50,7 +49,7 @@ export function createCalendar(name: string, type: Schema.CalendarType, size?: n
 
     if(err) return
 
-    const action : I.CreateCalendar = {
+    const action = {
       type: ActionEntities.CREATE_CALENDAR,
       key: id,
       data: calendar
@@ -86,7 +85,7 @@ export function createCalendarFromResource(resource: Schema.CalendarResource, ty
 
     if(err) return
 
-    const action: I.CreateCalendar = {
+    const action = {
       type: ActionEntities.CREATE_CALENDAR,
       key: data.id,
       data: calendar

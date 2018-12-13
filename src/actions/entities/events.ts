@@ -1,90 +1,82 @@
-import * as I from './interfaces';
 import { Schema } from '@app/store';
-import { ActionEntities, ActionEventParticipants } from '@app/actions/actionConstants';
+import { ActionEntities, Action } from '@app/actions';
+import * as api from '@app/actions/api';
+import { Dispatch } from 'redux';
+import { to } from '@app/actions/util';
 
-import { join, forEach } from 'lodash/fp';
 
-import uuidv4 from 'uuid/v4';
+export interface TeachEventParams {
+  start: string,
+  end: string,
+  name: string,
+  room: Schema.Calendar,
+  group: Schema.Calendar,
+  teacher: Schema.Calendar,
+}
 
-export function createTeachEvent(name: string, start: Date, end: Date, participants?: Schema.EntityId[]) {
-  return function(dispatch: any) {
-    const id = uuidv4();
-    const tag = 'timetable-creator:[' + join('|')([ "TEACH_EVENT", name, id]) + ']';
-    const createAction: I.CreateTeachEvent = {
+const TAG = 'timetable-creator:TEACH_EVENT'
+
+export function createTeachEvent(params: TeachEventParams) {
+
+  return async (dispatch: Dispatch) => {
+  const event: api.Event = {
+      start: {
+        dateTime: params.start,
+        timeZone: 'Europe/Helsinki',
+      },
+      end: {
+        dateTime: params.end,
+        timeZone: 'Europe/Helsinki',
+      },
+      summary: params.name,
+      description: TAG,
+      location: params.room.name,
+      attendees: [
+        {
+          email: params.teacher.id,
+          responseStatus:'accepted',
+        },
+        {
+          email: params.room.id,
+          responseStatus: 'accepted',
+        }
+      ]
+    }
+
+    const owner = params.group.id;
+
+    let data, err;
+
+    [data, err] = await to(api.postEvent(owner, event, dispatch));
+    console.log(data);
+
+    if(err) return;
+
+    const e: Schema.TeachEvent = {
+      id: data.id,
+      name: data.summary,
+      owner,
+      description: data.description,
+      meta: {
+        tag: TAG
+      },
+      time: {
+        start: data.start.dateTime,
+        end: data.end.dateTime
+      },
+      participants: [
+        params.teacher.id,
+        params.room.id,
+      ]
+    }
+
+    const action: Action = {
       type: ActionEntities.CREATE_TEACH_EVENT,
-      key: id,
-      data: {
-        id,
-        name,
-        description: "",
-        owner: 
-        meta: {
-          tag,
-        },
-        time: {
-          start,
-          end
-        },
-        participants: []
-      }
-    };
-
-    dispatch(createAction);
-
-    const setAllParticipants = forEach((p: Schema.EntityId) => {
-      dispatch(setParticipant(id, p));
-    });
-
-    if(participants) {
-      setAllParticipants(participants);
+      key: data.id,
+      data: e,
     }
-  }
-}
 
-export function updateTeachEvent(event: Schema.EntityId, args: I.UpdateTeachEventArgs): I.UpdateTeachEvent {
-
-  const id = event;
-  const tag = 'timetable-creator:[' + join('|')([ "TEACH_EVENT", args.name, id]) + ']';
-  const data = {
-    id,
-    name: args.name,
-    description: args.description,
-    time: args.time,
-    meta: {
-      tag
-    }
+    dispatch(action);
   }
 
-  return {
-    type: ActionEntities.UPDATE_TEACH_EVENT,
-    key: event,
-    data
-  };
-}
-
-export function deleteTeachEvent(event: Schema.EntityId): I.DeleteTeachEvent {
-  return {
-    type: ActionEntities.DELETE_TEACH_EVENT,
-    key: event
-  }
-}
-
-export function setParticipant(event: Schema.EntityId, participant: Schema.EntityId): I.SetParticipant {
-  return {
-    type: ActionEventParticipants.SET_PARTICIPANT,
-    key: event,
-    data: {
-      participant
-    }
-  };
-}
-
-export function removeParticipant(event: Schema.EntityId, participant: Schema.EntityId): I.RemoveParticipant {
-    return {
-    type: ActionEventParticipants.SET_PARTICIPANT,
-    key: event,
-    data: {
-      participant
-    }
-  };
 }

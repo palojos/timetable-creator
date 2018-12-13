@@ -30,6 +30,7 @@ export interface Event {
     responseStatus: 'needsAction' | 'accepted' | 'declined' | 'tentative';
   }[];
   description?: string;
+  location?: string;
   summary: string;
   id?: string;
   [key: string]: any;

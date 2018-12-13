@@ -40,8 +40,8 @@ export interface TeachEvent {
     tag: string;
   }
   time: {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
   }
   participants: EntityId[];
 }

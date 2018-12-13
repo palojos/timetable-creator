@@ -1,2 +1,2 @@
 export * from './CalendarForm';
-//export * from './EventForm';
+export * from './EventForm';
