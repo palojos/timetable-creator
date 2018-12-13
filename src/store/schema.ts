@@ -37,7 +37,6 @@ export interface TeachEvent {
   description: string;
   meta: {
     tag: string;
-    ref: string;
   }
   time: {
     start: Date;
@@ -120,7 +119,4 @@ export interface CalendarResource {
   id: EntityId;
   name: string;
   description: string;
-  meta: {
-    ref: string;
-  }
 }
