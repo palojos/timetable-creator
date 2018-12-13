@@ -7,20 +7,6 @@ import { Dispatch } from 'redux';
 
 import { join } from 'lodash/fp';
 
-export function createRoom( name: string, size: number) {
-  return createCalendar(name, Schema.CalendarType.ROOM, size);
-
-}
-
-export function createTeacher( name: string ) {
-  return createCalendar(name, Schema.CalendarType.TEACHER);
-}
-
-export function createGroup( name: string, size: number) {
-  return createCalendar(name, Schema.CalendarType.GROUP, size);
-
-}
-
 export function createCalendar(name: string, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
 
   return async function(dispatch) {
