@@ -22,11 +22,9 @@ export function createTeachEvent(params: TeachEventParams) {
   const event: api.Event = {
       start: {
         dateTime: params.start,
-        timeZone: 'Europe/Helsinki',
       },
       end: {
         dateTime: params.end,
-        timeZone: 'Europe/Helsinki',
       },
       summary: params.name,
       description: TAG,
@@ -38,6 +36,10 @@ export function createTeachEvent(params: TeachEventParams) {
         },
         {
           email: params.room.id,
+          responseStatus: 'accepted',
+        },
+        {
+          email: params.group.id,
           responseStatus: 'accepted',
         }
       ]
@@ -77,6 +79,8 @@ export function createTeachEvent(params: TeachEventParams) {
     }
 
     dispatch(action);
+
+    [data, err] = await to(api.getEventList(owner, dispatch));
   }
 
 }

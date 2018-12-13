@@ -18,6 +18,7 @@ export class Dashboard extends React.Component {
         <Link to="/create/calendar/teacher">Create Teacher</Link>
         <Link to="/create/calendar/room">Create Room </Link>
         <Link to="/create/calendar/group">Create Group</Link>
+        <Link to="/create/event">Create Event</Link>
 
         <h2>Calendars</h2>
         <div>

@@ -15,14 +15,14 @@ const mapStateToProps = (state: Schema.Store) => {
       values,
       filter((c: Schema.Calendar) => c.meta.type == type ),
       sortBy((c: Schema.Calendar) => c.name),
-    ); 
+    );
   }
 
   return {
     calendars: state.entities.calendars,
     rooms: filterByType(Schema.CalendarType.ROOM)(state.entities.calendars),
     teachers: filterByType(Schema.CalendarType.TEACHER)(state.entities.calendars),
-    groups: filterByType(Schema.CalendarType.GROUPS)(state.entities.calendars),
+    groups: filterByType(Schema.CalendarType.GROUP)(state.entities.calendars),
   }
 }
 
@@ -40,6 +40,7 @@ interface IEventFormProps {
   groups: Schema.Calendar[];
   calendars: Schema.Calendars;
   createEvent: (params: entities.TeachEventParams) => void;
+  history: any;
 }
 
 interface IEventFormState {
@@ -85,6 +86,7 @@ class EventFormView extends React.Component<IEventFormProps, IEventFormState> {
     };
 
     this.props.createEvent(params);
+
   }
 
   handleTeacherChange(e: any) {

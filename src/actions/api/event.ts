@@ -19,11 +19,9 @@ export interface EventApiError extends EventApiAction {
 export interface Event {
   start: {
     dateTime: string;
-    timeZone: string;
   };
   end: {
     dateTime: string;
-    timeZone: string;
   };
   attendees?: {
     email: string;
@@ -37,7 +35,7 @@ export interface Event {
 }
 
 export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispatch<any>, nextPageToken?:string, nextSyncToken?:string) {
-  
+
   const get = () => {
     let params: {
       singleEvents: boolean;
@@ -105,7 +103,8 @@ export async function getEvent(calendarId: Schema.EntityId, eventId: Schema.Enti
   const get = () => {
     return client.request({
       method: 'get',
-      url: '/calendar/v3/calendars/' + calendarId + '/events/' + eventId
+      url: '/calendar/v3/calendars/' + calendarId + '/events/' + eventId,
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
     });
   }
 
@@ -142,9 +141,8 @@ export async function postEvent(calendarId: Schema.EntityId, event: Event, dispa
     return client.request({
       method: 'post',
       url: '/calendar/v3/calendars/' + calendarId + '/events',
-      data: {
-        event
-      }
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']},
+      data: event,
     });
   }
 
@@ -184,9 +182,7 @@ export async function putEvent(calendarId: Schema.EntityId, event: Event, dispat
     return client.request({
       method: 'put',
       url: '/calendar/v3/calendars/' + calendarId + '/events/' + event.id,
-      data: {
-        event
-      }
+      data: event,
     });
   }
 
@@ -223,6 +219,7 @@ export async function deleteEvent(calendarId: Schema.EntityId, event: Event, dis
     return client.request({
       method: 'delete',
       url: '/calendar/v3/calendars/' + calendarId + '/events/' + event.id,
+      headers: {'Authorization': "Bearer " + window.localStorage['gapi:token']}
     });
   }
 
