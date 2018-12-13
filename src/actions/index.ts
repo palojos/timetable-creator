@@ -5,15 +5,16 @@ import {
   ActionEntities,
   ActionType,
   ActionEventParticipants,
-  ActionApi
+  ActionApi,
+  ActionResource
 } from './actionConstants';
 
 //Loose Action interface for general use
 export interface Action extends ActionStrict {
-  [propName: string]: any
+  [propName: string]: any;
 }
 
-export { ActionFilter, ActionEntities, ActionType, ActionEventParticipants, ActionApi}
+export { ActionFilter, ActionEntities, ActionType, ActionEventParticipants, ActionApi, ActionResource};
 
 import * as filters from './filters';
 import * as entities from './entities';
