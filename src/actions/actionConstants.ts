@@ -111,11 +111,15 @@ export type ActionResource =
     "CREATE_CALENDAR_RESOURCE"
   | "CLEAR_RESOURCES"
   | "REMOVE_CALENDAR_RESOURCE"
+  | "CREATE_EVENT_RESOURCE"
+  | "REMOVE_EVENT_RESOURCE";
 
 export const ActionResource: {[key: string]: ActionResource} = {
   CREATE_CALENDAR_RESOURCE: "CREATE_CALENDAR_RESOURCE",
   CLEAR_RESOURCES: "CLEAR_RESOURCES",
-  REMOVE_CALENDAR_RESOURCE: "REMOVE_CALENDAR_RESOURCE"
+  REMOVE_CALENDAR_RESOURCE: "REMOVE_CALENDAR_RESOURCE",
+  CREATE_EVENT_RESOURCE: "CREATE_EVENT_RESOURCE",
+  REMOVE_EVENT_RESOURCE: "REMOVE_EVENT_RESOURCE"
 }
 
 export type ActionType =
@@ -124,6 +128,7 @@ export type ActionType =
   | ActionFilter
   | ActionEventParticipants
   | ActionResource
+  | "GLOBAL"
   | "NULL";
 
 export interface Action {

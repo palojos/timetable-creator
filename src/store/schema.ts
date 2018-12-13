@@ -35,6 +35,7 @@ export interface TeachEvent {
   id: EntityId;
   name: string;
   description: string;
+  owner: EntityId;
   meta: {
     tag: string;
   }
@@ -87,24 +88,14 @@ export interface TimeFilter {
 export type TimeFilterType = "AFTER" | "BEFORE";
 
 export interface Status {
-    teachers: {[id:string]: EntityStatus}
-    rooms: {[id:string]: EntityStatus}
-    groups: {[id:string]: EntityStatus}
-    events: {[id: string]: EntityStatus}
-    resources: {[id: string]: EntityStatus}
-    global: {
-      fetching: boolean;
-    }
+    calendars: {[id:string]: EntityStatus};
+    events: {[id: string]: EntityStatus};
+    global: GlobalStatus;
   }
 
 export interface EntityStatus {
   id: EntityId;
-  valid: boolean;
-  status?: "CREATE" | "UPDATE" | "DELETE" | "FETCH";
-  tokens: {
-    api: string;
-  }
-  lastUpdate: number;
+  status?: "POST" | "PUT" | "DELETE" | "GET" | "VALID";
 }
 
 export interface GlobalStatus {
@@ -113,12 +104,26 @@ export interface GlobalStatus {
 
 export interface Resources {
   calendars: CalendarResources;
+  events: EventResources;
 }
 
 export type CalendarResources = {[key: string]: CalendarResource}
+export type EventResources = {[key: string]: EventResource}
 
 export interface CalendarResource {
   id: EntityId;
   name: string;
   description: string;
+}
+
+export interface EventResource {
+  id: EntityId;
+  name: string;
+  description: string;
+  owner: EntityId;
+  time: {
+    start: Date;
+    end: Date;
+  }
+  participants: EntityId[];
 }

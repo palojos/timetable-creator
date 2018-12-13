@@ -3,13 +3,10 @@ import { Schema } from '@app/store';
 import { Action } from '@app/actions';
 
 const DEFAULT_STATE: Schema.Status = {
-  teachers: {},
-  rooms: {},
-  groups: {},
+  calendars: {},
   events: {},
-  resources: {},
   global: {
-    fetching: false
+    isFetching: false
   }
 };
 

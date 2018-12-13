@@ -17,9 +17,9 @@ export function createTeachEvent(name: string, start: Date, end: Date, participa
         id,
         name,
         description: "",
+        owner: 
         meta: {
           tag,
-          ref: "null"
         },
         time: {
           start,

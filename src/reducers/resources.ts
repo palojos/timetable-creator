@@ -23,6 +23,24 @@ function calendars(state: Schema.CalendarResources = {}, action: Action): Schema
   }
 }
 
+function events(state: Schema.EventResources = {}, action: Action): Schema.EventResources {
+  switch (action.type) {
+
+    case ActionResource.CREATE_EVENT_RESOURCE:
+      return assign(state)({[action.key]: action.data});
+
+    case ActionResource.REMOVE_EVENT_RESOURCE:
+      return omit([action.key])(state);
+
+    case ActionResource.CLEAR_RESOURCES:
+      return {};
+
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
-  calendars
+  calendars,
+  events
 })
