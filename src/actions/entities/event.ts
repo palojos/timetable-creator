@@ -43,14 +43,13 @@ export function createTeachEvent(params: TeachEventParams) {
           responseStatus: 'accepted',
         }
       ]
-    }
+    };
 
     const owner = params.group.id;
 
     let data, err;
 
     [data, err] = await to(api.postEvent(owner, event, dispatch));
-    console.log(data);
 
     if(err) return;
 
@@ -79,8 +78,71 @@ export function createTeachEvent(params: TeachEventParams) {
     }
 
     dispatch(action);
-
-    [data, err] = await to(api.getEventList(owner, dispatch));
   }
+}
 
+export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventParams) {
+
+  return async (dispatch: any) => {
+  const event: api.Event = {
+      start: {
+        dateTime: params.start,
+      },
+      end: {
+        dateTime: params.end,
+      },
+      id: eventId,
+      summary: params.name,
+      description: TAG,
+      location: params.room.name,
+      attendees: [
+        {
+          email: params.teacher.id,
+          responseStatus:'accepted',
+        },
+        {
+          email: params.room.id,
+          responseStatus: 'accepted',
+        },
+        {
+          email: params.group.id,
+          responseStatus: 'accepted',
+        }
+      ]
+    };
+
+    const owner = params.group.id;
+
+    let data, err;
+
+    [data, err] = await to(api.putEvent(owner, event, dispatch));
+
+    if(err) return;
+
+    const e: Schema.TeachEvent = {
+      id: data.id,
+      name: data.summary,
+      owner,
+      description: data.description,
+      meta: {
+        tag: TAG
+      },
+      time: {
+        start: data.start.dateTime,
+        end: data.end.dateTime
+      },
+      participants: [
+        params.teacher.id,
+        params.room.id,
+      ]
+    }
+
+    const action: Action = {
+      type: ActionEntities.UPDATE_TEACH_EVENT,
+      key: e.id,
+      data: e,
+    };
+
+    dispatch(action);
+  }
 }

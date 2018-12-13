@@ -92,7 +92,7 @@ export function createCalendarFromResource(resource: Schema.CalendarResource, ty
     };
 
     dispatch(action);
-    
+
     //removing resource as it is now part of entities
     dispatch({
       type: ActionResource.REMOVE_CALENDAR_RESOURCE,

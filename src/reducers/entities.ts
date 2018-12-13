@@ -1,5 +1,5 @@
 import {Schema} from '@app/store';
-import { Action, ActionEntities, ActionEventParticipants } from '@app/actions';
+import { Action, ActionEntities } from '@app/actions';
 
 import { combineReducers } from 'redux';
 
@@ -20,8 +20,6 @@ function calendars(state: Schema.Calendars = {}, action: Action): Schema.Calenda
 }
 
 function events(state: Schema.Events = {}, action: Action): Schema.Events {
-  let event: any
-  let prev: Schema.TeachEvent
   switch (action.type) {
     case ActionEntities.CLEAR_ENTITIES:
       return {};
@@ -30,25 +28,11 @@ function events(state: Schema.Events = {}, action: Action): Schema.Events {
       return assign<Schema.Events>(state)({[action.key]: action.data});
 
     case ActionEntities.UPDATE_TEACH_EVENT:
-      prev = state[action.key];
-      event = action.data;
-      event.participants = prev.participants;
 
-      return assign(state)({[action.key]:event});
+      return assign(state)({[action.key]:action.data});
 
     case ActionEntities.DELETE_TEACH_EVENT:
       return omit([action.key])(state);
-
-    case ActionEventParticipants.SET_PARTICIPANT:
-      event = state[action.key];
-      event.participants = union(event.participants)([action.data.participant]);
-
-      return assign(state)({[action.key]:event});
-
-    case ActionEventParticipants.REMOVE_PARTICIPANT:
-      event = state[action.key];
-      event.participants = remove(action.data.participant)(event.participants);
-      return assign(state)({[action.key]: event});
 
     default:
       return state;

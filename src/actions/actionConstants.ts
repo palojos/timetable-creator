@@ -74,21 +74,7 @@ export const ActionEntities: {[key: string]: ActionEntities} = {
   UPDATE_TEACH_EVENT: "UPDATE_TEACH_EVENT",
   DELETE_TEACH_EVENT: "DELETE_TEACH_EVENT",
   CLEAR_ENTITIES: "CLEAR_ENTITIES"
-}
-
-export type ActionReservedEvents =
-    "SET_RESERVED_EVENT"
-  | "REMOVE_RESERVED_EVENT"
-  | "CLEAR_RESERVED_EVENTS";
-
-export type ActionEventParticipants =
-    "SET_PARTICIPANT"
-  | "REMOVE_PARTICIPANT";
-
-export const ActionEventParticipants: {[key: string]: ActionEventParticipants} = {
-  SET_PARTICIPANT: "SET_PARTICIPANT",
-  REMOVE_PARTICIPANT: "REMOVE_PARTICIPANT"
-}
+};
 
 export type ActionFilter =
     "SET_CALENDAR_FILTER"
@@ -126,7 +112,6 @@ export type ActionType =
     ActionApi
   | ActionEntities
   | ActionFilter
-  | ActionEventParticipants
   | ActionResource
   | "GLOBAL"
   | "NULL";

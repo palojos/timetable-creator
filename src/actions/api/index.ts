@@ -1,2 +1,2 @@
-export * from './calendars';
+export * from './calendar';
 export * from './event';

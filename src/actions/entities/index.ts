@@ -7,4 +7,4 @@ export function clearEntities() {
 }
 
 export * from './calendar';
-export * from './events';
+export * from './event';
