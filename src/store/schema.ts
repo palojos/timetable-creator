@@ -91,7 +91,13 @@ export interface Status {
     calendars: {[id:string]: EntityStatus};
     events: {[id: string]: EntityStatus};
     global: GlobalStatus;
+    errors: Error[]
   }
+
+export interface Error {
+  id: EntityId;
+  statusCode: number;
+}
 
 export interface EntityStatus {
   id: EntityId;
@@ -99,7 +105,8 @@ export interface EntityStatus {
 }
 
 export interface GlobalStatus {
-  isFetching: boolean;
+  loading: boolean;
+  updating: boolean;
 }
 
 export interface Resources {
@@ -122,8 +129,8 @@ export interface EventResource {
   description: string;
   owner: EntityId;
   time: {
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
   }
   participants: EntityId[];
 }

@@ -3,7 +3,7 @@ import { Action, ActionEntities } from '@app/actions';
 
 import { combineReducers } from 'redux';
 
-import { omit, assign, union, remove } from 'lodash/fp';
+import { omit, assign } from 'lodash/fp';
 
 
 function calendars(state: Schema.Calendars = {}, action: Action): Schema.Calendars {

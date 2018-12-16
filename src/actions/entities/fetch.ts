@@ -1,5 +1,244 @@
 import { Schema } from '@app/store';
-import { ActionEntities, Action, ActionResource } from '@app/actions';
+import { ActionEntities, ActionResource } from '@app/actions';
 import * as api from '@app/actions/api';
-import { Dispatch } from 'redux';
 import { to } from '@app/actions/util';
+
+import { map, concat } from 'lodash/fp';
+
+export function fetch() {
+
+  return async (dispatch: any) => {
+
+    // assign dispatcher to module wide variable
+    //indicate that we are starting to load data
+    dispatch({
+      type: "GLOBAL",
+      data: {
+        loading: true,
+        updating: false,
+      },
+    });
+
+    let data, err;
+
+    [data, err] = await to(loadCalendarIds(dispatch));
+
+    if(err) return Promise.reject(complete(dispatch));
+
+    [data, err] = await to(loadCalendars(data, dispatch));
+
+    console.log(err);
+    if(err) return Promise.reject(complete(dispatch));
+
+    return Promise.resolve(complete(dispatch));
+  }
+}
+
+async function loadCalendarIds(dispatch: any, nextPageToken?: string): Promise<Schema.EntityId[]> {
+
+  let list: Schema.EntityId[] = [];
+
+  let data, err;
+
+  [data, err] = await to(api.getCalendarList(dispatch, nextPageToken=nextPageToken));
+
+  if(err) return Promise.reject(err);
+
+  list = map( (i:any) => { return i.id })(data.items);
+
+  if(data.nextPageToken) {
+    [data, err] = await to(loadCalendarIds(dispatch, data.nextPageToken));
+    if (err) {
+      return Promise.reject(err);
+    }
+    return Promise.resolve(concat(list)(data));
+  }
+
+  return Promise.resolve(list);
+
+}
+
+async function loadCalendars(calendarIds: Schema.EntityId[], dispatch: any): Promise<any> {
+
+  const collection = map((id: Schema.EntityId) => {
+    return loadCalendar(id, dispatch);
+  })(calendarIds);
+
+  let data, err;
+
+  [data, err] = await to(Promise.all(collection));
+
+  if (err) return Promise.reject(err);
+
+  return Promise.resolve(data);
+}
+
+async function loadCalendar(calendarId: Schema.EntityId, dispatch: any): Promise<any> {
+
+  let data, err;
+
+  [data, err] = await to(api.getCalendar(calendarId, dispatch));
+
+  if (err) return Promise.reject(err);
+
+  storeCalendar(data, dispatch);
+
+  [data, err] = await to(loadEvents(calendarId, dispatch));
+
+  if (err) return Promise.reject(err);
+
+  return Promise.resolve();
+}
+
+async function loadEvents(calendarId: Schema.EntityId, dispatch: any, nextPageToken?: string): Promise<any> {
+
+  let data, err;
+
+  [data, err] = await to(api.getEventList(calendarId, dispatch, nextPageToken=nextPageToken));
+
+  if (err) return Promise.reject(err);
+
+  data.items.map( (i: any) => {
+    storeEvent(i, dispatch);
+  });
+
+  if (!data.nextPageToken)  return Promise.resolve();
+
+  [data, err] = await to(loadEvents(calendarId, dispatch, data.nextPageToken));
+
+  if (err) return Promise.reject(err);
+
+  return Promise.resolve();
+
+}
+
+function storeCalendar(gapiCalendar: any, dispatch: any) {
+
+  const meta = parseCalendarMeta(gapiCalendar.description);
+
+  if(meta) {
+    const calendar: Schema.Calendar = {
+      id: gapiCalendar.id,
+      name: gapiCalendar.summary,
+      description: gapiCalendar.description,
+      meta,
+    };
+
+    dispatch({
+      type: ActionEntities.CREATE_CALENDAR,
+      key: gapiCalendar.id,
+      data: calendar,
+    });
+  }
+
+  else {
+    const calendar: Schema.CalendarResources = {
+      id: gapiCalendar.id,
+      name: gapiCalendar.summary,
+      description: gapiCalendar.description ? gapiCalendar.description : "",
+    };
+
+    dispatch({
+      type: ActionResource.CREATE_CALENDAR_RESOURCE,
+      key: gapiCalendar.id,
+      data: calendar,
+    });
+  }
+}
+
+function storeEvent(gapiEvent: any, dispatch: any) {
+
+  const meta = parseEventMeta(gapiEvent.description);
+
+  const id = gapiEvent.organizer.email + "/"  + gapiEvent.id;
+
+  if(meta) {
+    const event: Schema.TeachEvent = {
+      id,
+      name: gapiEvent.summary,
+      description: gapiEvent.description ? gapiEvent.description : "",
+      meta,
+      owner: gapiEvent.organizer.email,
+      participants: map( (i: any) => { return i.email } )(gapiEvent.attendees),
+      time: {
+        start: gapiEvent.start.datetime,
+        end: gapiEvent.end.datetime,
+      },
+    }
+
+    dispatch({
+      type: ActionEntities.CREATE_TEACH_EVENT,
+      key: id,
+      data: event,
+    });
+  }
+
+  else {
+    const event: Schema.EventResource = {
+      id,
+      name: gapiEvent.summary,
+      description: gapiEvent.description ? gapiEvent.description : "",
+      owner: gapiEvent.organizer.email,
+      participants: map( (i: any) => { return i.email } )(gapiEvent.attendees),
+      time: {
+        start: gapiEvent.start.dateTime ? gapiEvent.start.dateTime : gapiEvent.start.date,
+        end: gapiEvent.end.dateTime ? gapiEvent.end.dateTime : gapiEvent.end.date,
+      },
+    };
+
+    dispatch({
+      type: ActionResource.CREATE_EVENT_RESOURCE,
+      key: id,
+      data: event,
+    });
+  }
+}
+
+function parseCalendarMeta(data: string = ""): any {
+  const re = /timetable-creator:(TEACHER|GROUP|ROOM):?(\d+)?/
+  const match = data.match(re);
+
+  if(match) {
+
+    let type: Schema.CalendarType = Schema.CalendarType.ROOM;
+    switch (match[1]) {
+      case Schema.CalendarType.TEACHER:
+        type = Schema.CalendarType.TEACHER;
+        break;
+      case Schema.CalendarType.GROUP:
+        type = Schema.CalendarType.GROUP;
+        break;
+    }
+    const meta = {
+      tag: match[0],
+      type,
+      size: match.length > 2 ? Number(match[2]) : undefined,
+    }
+    return meta;
+  }
+  else {
+    return null;
+  }
+}
+
+function parseEventMeta(data: string = "") {
+  const re = /timetable-creator:TEACH_EVENT/
+  const match = data.match(re);
+
+  if(match) {
+    return  {tag: match[0]};
+  }
+  else {
+    return null;
+  }
+}
+
+function complete(dispatch: any) {
+  dispatch({
+    type: "GLOBAL",
+    data: {
+      loading: false,
+      updating: false,
+    },
+  });
+}

@@ -4,6 +4,8 @@ import { Dispatch } from 'redux';
 import { client, to } from '@app/actions/util';
 import uuidv4 from 'uuid/v4';
 
+import moment from 'moment';
+
 export interface EventApiAction extends Action {
   key: Schema.EntityId;
   flags?: {
@@ -42,9 +44,11 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
       orderBy: 'startTime' | 'updated';
       pageToken?: string;
       syncToken?: string;
+      timeMin: string;
     } = {
       singleEvents: true,
-      orderBy: 'startTime'
+      orderBy: 'startTime',
+      timeMin: moment().startOf('quarter').format(),
     };
 
     if(nextPageToken) {

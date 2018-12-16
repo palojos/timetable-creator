@@ -11,7 +11,7 @@ export const Home = () => {
   }
   return (
     <div>
-      { token ? (<Redirect to="/dashboard"/>) : (<Redirect to="/auth/login" />) }
+      { token ? (<Redirect to="/loading"/>) : (<Redirect to="/auth/login" />) }
     </div>
   );
 }

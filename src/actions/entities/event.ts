@@ -53,8 +53,10 @@ export function createTeachEvent(params: TeachEventParams) {
 
     if(err) return;
 
+    const id = owner + '/' + data.id;
+
     const e: Schema.TeachEvent = {
-      id: data.id,
+      id,
       name: data.summary,
       owner,
       description: data.description,
@@ -73,7 +75,7 @@ export function createTeachEvent(params: TeachEventParams) {
 
     const action: Action = {
       type: ActionEntities.CREATE_TEACH_EVENT,
-      key: data.id,
+      key: id,
       data: e,
     }
 
@@ -84,6 +86,8 @@ export function createTeachEvent(params: TeachEventParams) {
 export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventParams) {
 
   return async (dispatch: any) => {
+
+  const id = eventId.split("/")[1]
   const event: api.Event = {
       start: {
         dateTime: params.start,
@@ -91,7 +95,7 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
       end: {
         dateTime: params.end,
       },
-      id: eventId,
+      id: id,
       summary: params.name,
       description: TAG,
       location: params.room.name,
@@ -120,7 +124,7 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
     if(err) return;
 
     const e: Schema.TeachEvent = {
-      id: data.id,
+      id,
       name: data.summary,
       owner,
       description: data.description,
@@ -145,4 +149,8 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
 
     dispatch(action);
   }
+}
+
+export function deleteTeachEvent(eventId: Schema.EntityId) {
+
 }

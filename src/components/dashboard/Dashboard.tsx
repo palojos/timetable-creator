@@ -5,9 +5,10 @@ import { Schema } from '@app/store';
 
 import { VisibleCalendarList } from './CalendarList';
 
+
 export class Dashboard extends React.Component {
 
-  constructor(props: {}) {
+  constructor(props: any) {
     super(props);
   }
 

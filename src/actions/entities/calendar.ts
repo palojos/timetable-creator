@@ -18,7 +18,7 @@ export function createCalendar(name: string, type: Schema.CalendarType, size?: n
     if(err) return
 
     let id = data.id
-    let tag = 'timetable-creator:' + join(':')(size ? [ type, name, size] : [type, name]);
+    let tag = 'timetable-creator:' + join(':')(size ? [ type, size] : [type]);
     let description = tag;
     const calendar: Schema.Calendar = {
       id,
@@ -54,7 +54,7 @@ export function createCalendarFromResource(resource: Schema.CalendarResource, ty
 
     let id = resource.id;
     let name = resource.name;
-    let tag = 'timetable-creator:' + join(':')(size ? [ type, name, size] : [type, name]);
+    let tag = 'timetable-creator:' + join(':')(size ? [ type, size] : [type]);
     let description = resource.description + '\n' + tag;
     const calendar: Schema.Calendar = {
       id,
