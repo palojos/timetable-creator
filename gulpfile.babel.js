@@ -11,7 +11,18 @@ import buffer from 'vinyl-buffer';
 
 import connect from 'gulp-connect';
 
+import sass from 'gulp-sass';
+
 export const clean = () => del(['./build/']);
+
+export const SASS = () => gulp.src('./src/style/**/*.scss')
+  .pipe(sass()).on('error', sass.logError)
+  .pipe(gulp.dest('./build/'))
+  .pipe(connect.reload());
+
+export const watch = () => {
+  gulp.watch('./src/style/**/*.scss', SASS);
+}
 
 export function build() {
 
@@ -50,4 +61,7 @@ function server() {
   });
 }
 
-export default gulp.parallel(server, build);
+export default gulp.series(
+  SASS,
+  gulp.parallel(server, build, watch),
+  );

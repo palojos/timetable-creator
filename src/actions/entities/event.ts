@@ -151,6 +151,70 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
   }
 }
 
-export function deleteTeachEvent(eventId: Schema.EntityId) {
+export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventParams) {
 
+  return async function(dispatch: any) {
+    const id = eventId.split("/")[1]
+    const event: api.Event = {
+      start: {
+        dateTime: params.start,
+      },
+      end: {
+        dateTime: params.end,
+      },
+      id: id,
+      summary: params.name,
+      description: TAG,
+      location: params.room.name,
+      attendees: [
+        {
+          email: params.teacher.id,
+          responseStatus:'accepted',
+        },
+        {
+          email: params.room.id,
+          responseStatus: 'accepted',
+        },
+        {
+          email: params.group.id,
+          responseStatus: 'accepted',
+        }
+      ]
+    };
+
+    const owner = params.group.id;
+
+    let data, err;
+
+    [data, err] = await to(api.deleteEvent(owner, event, dispatch));
+
+    if(err) return;
+
+    const e: Schema.TeachEvent = {
+      id,
+      name: data.summary,
+      owner,
+      description: data.description,
+      meta: {
+        tag: TAG
+      },
+      time: {
+        start: data.start.dateTime,
+        end: data.end.dateTime
+      },
+      participants: [
+        params.teacher.id,
+        params.room.id,
+      ]
+    }
+
+    const action: Action = {
+      type: ActionEntities.DELETE_TEACH_EVENT,
+      key: e.id,
+      data: e,
+    };
+
+    dispatch(action);
+
+  }
 }
