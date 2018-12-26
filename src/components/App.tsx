@@ -9,6 +9,12 @@ import { EventForm } from '@app/components/forms';
 
 export let App = () => {
   return(
+    <div className="container">
+    <div className="row">
+      <header className="col-12">
+      <h1> Timetable creator </h1>
+      </header>
+    </div>
     <Switch>
       <Route exact path='/' component={Home} />
 
@@ -26,6 +32,7 @@ export let App = () => {
       //<Route path='/update/event/:event_id' component={EventForm} />
       }
     </Switch>
+    </div>
   );
 }
 
