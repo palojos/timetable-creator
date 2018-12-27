@@ -1,6 +1,6 @@
 import entities from './entities';
-import filters from './filters';
 import resources from './resources';
 import status from './status';
+import ui from './ui'
 
-export {entities, filters, resources, status }
+export {entities, resources, status, ui }

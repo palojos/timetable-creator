@@ -190,28 +190,9 @@ export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
 
     if(err) return;
 
-    const e: Schema.TeachEvent = {
-      id,
-      name: data.summary,
-      owner,
-      description: data.description,
-      meta: {
-        tag: TAG
-      },
-      time: {
-        start: data.start.dateTime,
-        end: data.end.dateTime
-      },
-      participants: [
-        params.teacher.id,
-        params.room.id,
-      ]
-    }
-
     const action: Action = {
       type: ActionEntities.DELETE_TEACH_EVENT,
-      key: e.id,
-      data: e,
+      key: eventId,
     };
 
     dispatch(action);

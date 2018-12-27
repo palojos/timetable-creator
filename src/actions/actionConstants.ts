@@ -76,22 +76,22 @@ export const ActionEntities: {[key: string]: ActionEntities} = {
   CLEAR_ENTITIES: "CLEAR_ENTITIES"
 };
 
-export type ActionFilter =
-    "SET_CALENDAR_FILTER"
-  | "SET_TIME_FILTER"
-  | "REMOVE_CALENDAR_FILTER"
-  | "REMOVE_TIME_FILTER"
-  | "CLEAR_CALENDAR_FILTERS"
-  | "CLEAR_TIME_FILTERS";
+export type ActionUI =
+    "SELECT_ONE"
+  | "SELECT_ALL"
+  | "SET_VIEW"
+  | "CLEAR_PRESETS"
+  | "ERROR"
+  | "CLOSE_ERROR";
 
-export const ActionFilter: {[key: string]: ActionFilter} = {
-  SET_CALENDAR_FILTER: "SET_CALENDAR_FILTER",
-  SET_TIME_FILTER: "SET_TIME_FILTER",
-  REMOVE_CALENDAR_FILTER: "REMOVE_CALENDAR_FILTER",
-  REMOVE_TIME_FILTER: "REMOVE_TIME_FILTER",
-  CLEAR_TIME_FILTERS: "CLEAR_TIME_FILTERS",
-  CLEAR_CALENDAR_FILTERS: "CLEAR_CALENDAR_FILTERS"
-};
+export const ActionUI: {[key: string]: ActionUI} = {
+  SELECT_ONE: "SELECT_ONE",
+  SELECT_ALL: "SELECT_ALL",
+  SET_VIEW: "SET_VIEW",
+  CLEAR_PRESETS: "CLEAR_PRESETS",
+  ERROR: "ERROR",
+  CLOSE_ERROR: "CLOSE_ERROR",
+}
 
 export type ActionResource =
     "CREATE_CALENDAR_RESOURCE"
@@ -111,8 +111,8 @@ export const ActionResource: {[key: string]: ActionResource} = {
 export type ActionType =
     ActionApi
   | ActionEntities
-  | ActionFilter
   | ActionResource
+  | ActionUI
   | "GLOBAL"
   | "NULL";
 

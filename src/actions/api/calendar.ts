@@ -1,5 +1,5 @@
 import { Schema } from '@app/store';
-import { ActionApi, Action } from '@app/actions';
+import { ActionApi, Action, ui } from '@app/actions';
 import { Dispatch } from 'redux';
 import { client, to } from '@app/actions/util';
 import uuidv4 from 'uuid/v4';
@@ -75,6 +75,7 @@ export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: s
         hasPageToken
       }
     });
+    dispatch(ui.error("Api error: " + err.response.status ));
     return Promise.reject(err);
   }
 
@@ -116,6 +117,7 @@ export async function getCalendar(id: Schema.EntityId, dispatch: Dispatch<any>) 
       statusCode: err.response.status,
       key: id
     });
+    dispatch(ui.error("Api error: " + err.response.status ));
     return Promise.reject(err);
   }
 
@@ -158,6 +160,7 @@ export async function postCalendar(name: string, dispatch: Dispatch<any>) {
       statusCode: err.response.status,
       key: nonce
     });
+    dispatch(ui.error("Api error: " + err.response.status ));
     return Promise.reject(err);
   }
 
@@ -201,6 +204,7 @@ export async function putCalendar(id: Schema.EntityId, name: string, description
       statusCode: err.response.status,
       key: id
     });
+    dispatch(ui.error("Api error: " + err.response.status ));
     return Promise.reject(err)
   }
 

@@ -1,25 +1,30 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router';
+import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import { Container, Row, Col } from 'reactstrap';
+
 
 import { Dashboard } from '@app/components/dashboard';
 import { LoginForm, LoginHandler, LogoutHandler } from '@app/components/auth';
 import { CalendarForm } from '@app/components/forms';
 import { Home } from '@app/components/Home';
 import { EventForm } from '@app/components/forms';
+import { Error } from '@app/components/Error';
 
 export let App = () => {
   return(
-    <div className="container">
-    <div className="row">
-      <header className="col-12">
+    <Container fluid>
+    <Row>
+      <Col>
       <h1> Timetable creator </h1>
-      </header>
-    </div>
+      </Col>
+    </Row>
+    <Error />
     <Switch>
       <Route exact path='/' component={Home} />
 
       <Route path='/dashboard' component={Dashboard} />
       <Route path='/loading' component={LoadHandler} />
+      <Route path='/creating' component={Creator} />
 
       <Route path='/auth/login' component={LoginForm} />
       <Route path='/auth/success' component={LoginHandler} />
@@ -27,12 +32,16 @@ export let App = () => {
 
       <Route path='/create/calendar/:type' component={CalendarForm} />
 
-      <Route path='/create/event' component={EventForm} />
-      {
-      //<Route path='/update/event/:event_id' component={EventForm} />
-      }
+      <Route path='/create/event/:year/:month/:day' component={EventForm} />
+      { /*<Route path='/edit/event/:calendar/:id' component={EditEventForm} /> */ }
     </Switch>
-    </div>
+    <Row>
+      <Col>
+        <hr />
+        <Link className="btn btn-primary" to="/auth/logout">Logout</Link>
+      </Col>
+    </Row>
+    </Container>
   );
 }
 
@@ -71,3 +80,11 @@ class LoadHandlerA extends React.Component<any, any> {
 }
 
 const LoadHandler = connect(mapStateToProps, mapDispatchToProps)(LoadHandlerA);
+
+const Creator = () => {
+    return(
+      <div>
+        <h2>Creating.. </h2>
+      </div>
+    );
+}

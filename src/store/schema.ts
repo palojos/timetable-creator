@@ -5,11 +5,13 @@ All relevant interfaces and constants are exported and can be imported by
 import { Schema } from '@app/store'
 */
 
+import moment from 'moment';
+
 export interface Store {
   entities: Entities;
-  resources: Resources
-  filters: Filters;
+  resources: Resources;
   status: Status;
+  ui: UIState;
 }
 
 export interface Entities {
@@ -31,19 +33,26 @@ export interface Calendar {
   }
 }
 
-export interface TeachEvent {
-  id: EntityId;
-  name: string;
-  description: string;
-  owner: EntityId;
+export interface TeachEvent extends EventResource {
   meta: {
     tag: string;
   }
-  time: {
-    start: string;
-    end: string;
-  }
-  participants: EntityId[];
+}
+
+export interface UIState {
+  group?: EntityId;
+  teacher?: EntityId;
+  room?: EntityId;
+  view: {
+    start: moment.Moment;
+    end: moment.Moment;
+  };
+  error: UIError[];
+}
+
+export interface UIError {
+  id: string;
+  message: string;
 }
 
 export type EntityId = string;
@@ -54,38 +63,6 @@ export const CalendarType: {[propName: string]: CalendarType} = {
   GROUP: "GROUP",
   ROOM: "ROOM"
 }
-
-export interface Auth {
-  access_token: Token;
-  acquired_time?: Date;
-  expires_in?: number;
-  type?: Bearer;
-}
-
-export type Bearer = "Bearer";
-export type Token = string | null;
-
-export const Bearer = "Bearer";
-
-export interface Filters {
-  calendar: CalendarFilter[];
-  time: TimeFilter[];
-}
-
-export interface CalendarFilter {
-  type: CalendarFilterType;
-  entity?: EntityId;
-  calendarType?: CalendarType;
-}
-
-export type CalendarFilterType = "EXCLUDE" | "INCLUDE";
-
-export interface TimeFilter {
-  type: TimeFilterType;
-  time: Date;
-}
-
-export type TimeFilterType = "AFTER" | "BEFORE";
 
 export interface Status {
     calendars: {[id:string]: EntityStatus};

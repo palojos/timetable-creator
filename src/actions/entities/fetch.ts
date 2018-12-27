@@ -27,7 +27,6 @@ export function fetch() {
 
     [data, err] = await to(loadCalendars(data, dispatch));
 
-    console.log(err);
     if(err) return Promise.reject(complete(dispatch));
 
     return Promise.resolve(complete(dispatch));
@@ -161,8 +160,8 @@ function storeEvent(gapiEvent: any, dispatch: any) {
       owner: gapiEvent.organizer.email,
       participants: map( (i: any) => { return i.email } )(gapiEvent.attendees),
       time: {
-        start: gapiEvent.start.datetime,
-        end: gapiEvent.end.datetime,
+        start: gapiEvent.start.dateTime ? gapiEvent.start.dateTime : gapiEvent.start.date,
+        end: gapiEvent.end.dateTime ? gapiEvent.end.dateTime : gapiEvent.end.date,
       },
     }
 

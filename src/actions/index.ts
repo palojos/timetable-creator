@@ -1,7 +1,7 @@
 
 import {
   Action as ActionStrict,
-  ActionFilter,
+  ActionUI,
   ActionEntities,
   ActionType,
   ActionApi,
@@ -13,11 +13,11 @@ export interface Action extends ActionStrict {
   [propName: string]: any;
 }
 
-export { ActionFilter, ActionEntities, ActionType, ActionApi, ActionResource};
+export { ActionUI, ActionEntities, ActionType, ActionApi, ActionResource};
 
-import * as filters from './filters';
+import * as ui from './ui';
 import * as entities from './entities';
 import * as api from './api';
 
-export { filters, entities, api };
+export { ui, entities, api };
 

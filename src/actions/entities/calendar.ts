@@ -7,10 +7,11 @@ import { Dispatch } from 'redux';
 
 import { join } from 'lodash/fp';
 
-export function createCalendar(name: string, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
+export function createCalendar(history: any, name: string, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
 
   return async function(dispatch) {
 
+    history.push("/creating");
     let data, err;
 
     [data, err] = await to(api.postCalendar(name, dispatch));
@@ -42,14 +43,15 @@ export function createCalendar(name: string, type: Schema.CalendarType, size?: n
     };
 
     dispatch(action);
-
+    history.push("/");
   }
 }
 
-export function createCalendarFromResource(resource: Schema.CalendarResource, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
+export function createCalendarFromResource(history: any, resource: Schema.CalendarResource, type: Schema.CalendarType, size?: number): (dispatch: Dispatch<Action>) => Promise<void> {
 
   return async function(dispatch) {
 
+    history.push("/creating");
     let data, err;
 
     let id = resource.id;
@@ -84,6 +86,8 @@ export function createCalendarFromResource(resource: Schema.CalendarResource, ty
       type: ActionResource.REMOVE_CALENDAR_RESOURCE,
       key: id
     });
+    history.push("/");
+
   }
 }
 
