@@ -36,9 +36,29 @@ export function setView(start: moment.Moment, end: moment.Moment) {
   const action: Action = {
     type: ActionUI.SET_VIEW,
     data: {
-      start,
-      end,
+      start: start.clone(),
+      end: end.clone(),
     },
+  };
+
+  return action;
+}
+
+export function setEventStart(time: moment.Moment) {
+
+  const action: Action = {
+    type: ActionUI.SET_E_START,
+    data: time.clone(),
+  };
+
+  return action;
+}
+
+export function setEventEnd(time: moment.Moment) {
+
+  const action: Action = {
+    type: ActionUI.SET_E_END,
+    data: time.clone(),
   };
 
   return action;
@@ -47,23 +67,26 @@ export function setView(start: moment.Moment, end: moment.Moment) {
 export function clearPresets() {
 
   const action: Action = {
-    type: ActionUI.CLEAR_PRESETS
-  }
+    type: ActionUI.CLEAR_PRESETS,
+  };
 
   return action;
 }
 
 export function error(message: string) {
 
-  const id = uuidv4();
+  return (dispatch: any) => {
+    const id = uuidv4();
 
-  const action: Action = {
-    type: "ERROR",
-    key: id,
-    data: {id, message}
-  }
+    const action: Action = {
+      type: "ERROR",
+      key: id,
+      data: {id, message},
+    };
 
-  return action;
+    dispatch(action);
+
+  };
 }
 
 export function closeError(err: Schema.UIError) {
@@ -72,7 +95,20 @@ export function closeError(err: Schema.UIError) {
     type: "CLOSE_ERROR",
     key: err.id,
     data: err,
-  }
+  };
+
+  return action;
+}
+
+
+export function setName(name: string) {
+
+  const action: Action = {
+    type: ActionUI.SET_NAME,
+    data: {
+      name,
+    },
+  };
 
   return action;
 }

@@ -16,9 +16,10 @@ export interface TeachEventParams {
 
 const TAG = 'timetable-creator:TEACH_EVENT'
 
-export function createTeachEvent(params: TeachEventParams) {
+export function createTeachEvent(history: any, params: TeachEventParams) {
 
   return async (dispatch: Dispatch) => {
+
   const event: api.Event = {
       start: {
         dateTime: params.start,
@@ -70,6 +71,7 @@ export function createTeachEvent(params: TeachEventParams) {
       participants: [
         params.teacher.id,
         params.room.id,
+        params.group.id,
       ]
     }
 
@@ -80,6 +82,7 @@ export function createTeachEvent(params: TeachEventParams) {
     }
 
     dispatch(action);
+    history.push("/dashboard");
   }
 }
 

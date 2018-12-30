@@ -49,7 +49,7 @@ const CalendarSelectorView = (props: any) => {
   return(
     <Row>
       <Col>
-      <h3> Teacher <Link className="btn btn-secondary ml-2" to="/create/calendar/teacher"><FontAwesomeIcon icon="plus"/></Link></h3>
+      <h4> Teacher <Link className="btn btn-secondary ml-2" to="/create/calendar/teacher"><FontAwesomeIcon icon="plus"/></Link></h4>
       <CalendarDropdown
         selectFunction={props.selectTeacher}
         items={props.teachers}
@@ -57,7 +57,7 @@ const CalendarSelectorView = (props: any) => {
       />
       </Col>
       <Col>
-      <h3> Group <Link className="btn btn-secondary ml-2" to="/create/calendar/group"><FontAwesomeIcon icon="plus"/></Link></h3>
+      <h4> Group <Link className="btn btn-secondary ml-2" to="/create/calendar/group"><FontAwesomeIcon icon="plus"/></Link></h4>
       <CalendarDropdown
         selectFunction={props.selectGroup}
         items={props.groups}
@@ -65,7 +65,7 @@ const CalendarSelectorView = (props: any) => {
       />
       </Col>
       <Col>
-      <h3> Room <Link className="btn btn-secondary ml-2" to="/create/calendar/room"><FontAwesomeIcon icon="plus"/></Link></h3>
+      <h4> Room <Link className="btn btn-secondary ml-2" to="/create/calendar/room"><FontAwesomeIcon icon="plus"/></Link></h4>
       <CalendarDropdown
         selectFunction={props.selectRoom}
         items={props.rooms}

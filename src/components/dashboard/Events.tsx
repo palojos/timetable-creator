@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, ListGroup, ListGroupItem, CardFooter } from 'reactstrap';
+import { Row, Col, Badge, ListGroupItem, ListGroup} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,7 +10,7 @@ import { flow, filter, values, includes, sortBy, map, union, capitalize } from '
 import { Schema } from '@app/store';
 import { entities } from '@app/actions';
 
-interface Event {
+export interface Event {
   id: string;
   name: string;
   start: moment.Moment;
@@ -86,6 +86,7 @@ const mapStateToProps = (state: Schema.Store) => {
   )(state.resources.events)
 
   const u = union(events)(resources);
+  console.log(u);
 
   return {
     events: u.length !== 0 ? sortBy((e: Event) => e.start.valueOf())(u) : [],
@@ -166,10 +167,12 @@ const DayView = (props: DayViewProps) => {
 
   return(
       <Col>
-        <h3>{props.time.format("ddd DD.MM.YYYY")}
-          <Link to={"/create/event/" + props.time.format("YYYY/MM/DD")} className="btn btn-secondary ml-2">Create</Link>
-        </h3>
+        <h4>{props.time.format("ddd DD.MM.YYYY")}
+          <Link to={"/dashboard/create/event/" + props.time.format("YYYY/MM/DD")} className="btn btn-secondary ml-3">Create</Link>
+        </h4>
+        <ListGroup>
           {Items}
+        </ListGroup>
       </Col>
   )
 }
@@ -186,30 +189,19 @@ const EventView = (props: EventViewProps) => {
     props.deleteAction(props.event);
   }
 
-  return (
-  <Card>
-    <CardBody>
-      <CardTitle>{props.event.owner ? "Reserved" : props.event.name}</CardTitle>
-      <CardSubtitle>{props.event.start.format("HH:mm") + " - " + props.event.end.format("HH:mm")}</CardSubtitle>
-    </CardBody>
-    {props.event.owner ? (
-     <ListGroup flush>
-      <ListGroupItem>Owner: {props.event.owner.name}</ListGroupItem>
-      <ListGroupItem>Role: {capitalize(props.event.owner.meta.type)}</ListGroupItem>
-     </ListGroup>
-    ) : (
-      <React.Fragment>
-      <ListGroup flush>
-      <ListGroupItem>Teacher: {props.event.teacher ? props.event.teacher.name : "Unknown"}</ListGroupItem>
-      <ListGroupItem>Group: {props.event.group ? props.event.group.name : "Unknown"}</ListGroupItem>
-      <ListGroupItem>Room: {props.event.room ? props.event.room.name : "unknown"}</ListGroupItem>
-      </ListGroup>
-      <CardFooter>
-      <button className="btn btn-secondary" onClick={handleOnDelete}>Delete</button>
-    </CardFooter>
-    </React.Fragment>
-    )}
-  </Card>
+  return props.event.owner ? (
+    <ListGroupItem>
+    <h6> Reserved <Badge color="primary" className="float-right"> {props.event.start.format('HH:mm-') + props.event.end.format('HH:mm')} </Badge></h6>
+    <span>Owner: {props.event.owner.name}</span><span className="float-right">Role: {capitalize(props.event.owner.meta.type)}</span>
+    </ListGroupItem>
+  ) : (
+    <ListGroupItem>
+    <h6> {props.event.name} <Badge color="primary" className="float-right"> {props.event.start.format('HH:mm-') + props.event.end.format('HH:mm')} </Badge></h6>
+    <span>Teacher: {props.event.teacher ? props.event.teacher.name : "Not defined"}</span><br />
+    <span>Group: {props.event.group ? props.event.group.name : "Not defined"}</span><br />
+    <span>Room: {props.event.room ? props.event.room.name : "Not defined"}</span><br />
+    <button className="btn btn-primary" onClick={handleOnDelete}>Remove</button>
+    </ListGroupItem>
   );
 }
 

@@ -25,7 +25,7 @@ function events(state: Schema.Events = {}, action: Action): Schema.Events {
       return {};
 
     case ActionEntities.CREATE_TEACH_EVENT:
-      return assign<Schema.Events>(state)({[action.key]: action.data});
+      return assign(state)({[action.key]: action.data});
 
     case ActionEntities.UPDATE_TEACH_EVENT:
 

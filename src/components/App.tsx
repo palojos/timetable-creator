@@ -7,7 +7,7 @@ import { Dashboard } from '@app/components/dashboard';
 import { LoginForm, LoginHandler, LogoutHandler } from '@app/components/auth';
 import { CalendarForm } from '@app/components/forms';
 import { Home } from '@app/components/Home';
-import { EventForm } from '@app/components/forms';
+import { CreateEventForm } from '@app/components/forms';
 import { Error } from '@app/components/Error';
 
 export let App = () => {
@@ -31,8 +31,7 @@ export let App = () => {
       <Route path='/auth/logout' component={LogoutHandler} />
 
       <Route path='/create/calendar/:type' component={CalendarForm} />
-
-      <Route path='/create/event/:year/:month/:day' component={EventForm} />
+      <Route path='/create/event/:year/:month/:day' component={CreateEventForm} />
       { /*<Route path='/edit/event/:calendar/:id' component={EditEventForm} /> */ }
     </Switch>
     <Row>

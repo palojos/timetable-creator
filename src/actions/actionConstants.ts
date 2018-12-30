@@ -81,6 +81,9 @@ export type ActionUI =
   | "SELECT_ALL"
   | "SET_VIEW"
   | "CLEAR_PRESETS"
+  | "SET_NAME"
+  | "SET_E_START"
+  | "SET_E_END"
   | "ERROR"
   | "CLOSE_ERROR";
 
@@ -88,7 +91,10 @@ export const ActionUI: {[key: string]: ActionUI} = {
   SELECT_ONE: "SELECT_ONE",
   SELECT_ALL: "SELECT_ALL",
   SET_VIEW: "SET_VIEW",
+  SET_NAME: "SET_NAME",
   CLEAR_PRESETS: "CLEAR_PRESETS",
+  SET_E_START: "SET_E_START",
+  SET_E_END: "SET_E_END",
   ERROR: "ERROR",
   CLOSE_ERROR: "CLOSE_ERROR",
 }

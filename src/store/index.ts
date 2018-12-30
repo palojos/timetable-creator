@@ -10,7 +10,7 @@ import logger from 'redux-logger';
 
 // Exporting store configuration function
 export function configureStore() {
-  const middleware = applyMiddleware(thunk, logger);
+  const middleware = applyMiddleware(thunk);
   const rootReducer = combineReducers(reducers);
   const store = createStore(rootReducer, middleware);
 
