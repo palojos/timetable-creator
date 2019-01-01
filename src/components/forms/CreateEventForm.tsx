@@ -116,18 +116,16 @@ const mapStateToProps = (state: Schema.Store, props: CreateEventFormProps) => {
   const isTeacherValid: boolean = selectedTeacher !== undefined;
   const isGroupValid: boolean = selectedGroup !== undefined;
   const isRoomValid: boolean = selectedRoom !== undefined;
-  const isSizeValid: boolean = selectedGroup && selectedRoom ? selectedRoom.meta.size >= selectedGroup.meta.size : false;
+  const roomSize = selectedRoom ? selectedRoom.meta.size : undefined;
+  const groupSize = selectedGroup ? selectedGroup.meta.size : undefined;
+  const isSizeValid: boolean = roomSize && groupSize ? roomSize >= groupSize : false;
 
   const e_start = state.ui.e_start.clone();
   const e_end = state.ui.e_end.clone();
 
-  const isStartTimeValid = flow(
-    filter((e: Event) => e.start.isSameOrBefore(e_start) && e.end.isAfter(e_start)),
-  )(e).length === 0;
+  const isStartTimeValid = filter((e: Event) => e.start.isSameOrBefore(e_start) && e.end.isAfter(e_start))(e).length === 0;
 
-  const isEndTimeValid = flow(
-    filter((e: Event) => e.start.isBefore(e_end) && e.end.isSameOrAfter(e_end)),
-  )(e).length === 0;
+  const isEndTimeValid = filter((e: Event) => e.start.isBefore(e_end) && e.end.isSameOrAfter(e_end))(e).length === 0;
 
   const isTimeValid = e_start.isSameOrBefore(e_end);
 
@@ -218,7 +216,7 @@ class CreateEventFormView extends React.Component<any, CreateEventFormViewState>
 
   handleSubmit(e: any) {
     e.preventDefault();
-    const isValid = reduce((result, value) => {
+    const isValid = reduce((result:boolean, value: boolean) => {
       return result && value;
     }, true)(this.props.valid);
     if(!isValid) {

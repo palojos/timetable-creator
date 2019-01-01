@@ -108,9 +108,9 @@ const mapDispatchToProps = (dispatch: any) => {
         name: e.name,
         start: e.start.format(),
         end: e.end.format(),
-        group: e.group,
-        teacher: e.teacher,
-        room: e.room,
+        group: e.group ? e.group : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
+        teacher: e.teacher ? e.teacher : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
+        room: e.room ? e.room : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
       }));
     }
   }

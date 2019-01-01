@@ -33,6 +33,7 @@ interface CalendarFormState {
   name: string;
   type: Schema.CalendarType;
   size: number;
+  [name: string]: any;
 }
 
 interface CalendarFormProps {
@@ -81,7 +82,7 @@ class CalendarFormView extends React.Component<CalendarFormProps, CalendarFormSt
   handleInputChange(e: any) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+    const name: any = target.name;
 
     this.setState({[name]: value});
   }

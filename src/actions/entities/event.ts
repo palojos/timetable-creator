@@ -196,6 +196,7 @@ export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
     const action: Action = {
       type: ActionEntities.DELETE_TEACH_EVENT,
       key: eventId,
+      data,
     };
 
     dispatch(action);
