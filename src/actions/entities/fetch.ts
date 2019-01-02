@@ -33,7 +33,6 @@ export function fetch(start: moment.Moment, end: moment.Moment) {
   }
 }
 
-
 export function fetchEvents(calendarIds: Schema.EntityId[], start: moment.Moment, end: moment.Moment) {
 
   return async (dispatch: any) => {

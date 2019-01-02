@@ -44,25 +44,6 @@ export function setView(start: moment.Moment, end: moment.Moment) {
   return action;
 }
 
-export function setEventStart(time: moment.Moment) {
-
-  const action: Action = {
-    type: ActionUI.SET_E_START,
-    data: time.clone(),
-  };
-
-  return action;
-}
-
-export function setEventEnd(time: moment.Moment) {
-
-  const action: Action = {
-    type: ActionUI.SET_E_END,
-    data: time.clone(),
-  };
-
-  return action;
-}
 
 export function clearPresets() {
 
@@ -95,19 +76,6 @@ export function closeError(err: Schema.UIError) {
     type: "CLOSE_ERROR",
     key: err.id,
     data: err,
-  };
-
-  return action;
-}
-
-
-export function setName(name: string) {
-
-  const action: Action = {
-    type: ActionUI.SET_NAME,
-    data: {
-      name,
-    },
   };
 
   return action;

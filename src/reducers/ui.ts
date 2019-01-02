@@ -10,9 +10,6 @@ const defaultState: Schema.UIState = {
     start: moment('0000', 'hhmm').isoWeekday(1),
     end: moment('0000', 'hhmm').isoWeekday(5),
   },
-  e_start: moment().startOf('day').hour(9),
-  e_end: moment().startOf('day').hour(11),
-  name: "",
   error: [],
 };
 
@@ -50,24 +47,12 @@ export default function ui(state: Schema.UIState = defaultState, action: Action 
     case ActionUI.SET_VIEW:
       return assign(state)({view: action.data});
 
-    case ActionUI.SET_E_START:
-      return assign(state)({e_start: action.data});
-
-    case ActionUI.SET_E_END:
-      return assign(state)({e_end: action.data});
-
     case ActionUI.CLEAR_PRESETS:
       return assign(state)({
   teacher: undefined,
   group: undefined,
   room: undefined,
-  e_start: moment().startOf('day').hour(9),
-  e_end: moment().startOf('day').hour(11),
-  name: "",
 });
-
-    case ActionUI.SET_NAME:
-      return assign(state)({name: action.data.name});
 
     case ActionUI.ERROR:
       return assign(state)({error: error(state.error, action)});

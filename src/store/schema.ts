@@ -47,9 +47,6 @@ export interface UIState {
     start: moment.Moment;
     end: moment.Moment;
   };
-  e_start: moment.Moment;
-  e_end: moment.Moment;
-  name: string;
   error: UIError[];
 }
 
