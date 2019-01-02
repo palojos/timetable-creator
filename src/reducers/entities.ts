@@ -24,6 +24,9 @@ function events(state: Schema.Events = {}, action: Action): Schema.Events {
     case ActionEntities.CLEAR_ENTITIES:
       return {};
 
+    case "CLEAR_EVENTS":
+      return {};
+
     case ActionEntities.CREATE_TEACH_EVENT:
       return assign(state)({[action.key]: action.data});
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
-
+import moment from 'moment';
 
 import { Dashboard } from '@app/components/dashboard';
 import { LoginForm, LoginHandler, LogoutHandler } from '@app/components/auth';
@@ -52,13 +52,15 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state: Schema.Store) => {
   return {
     status: state.status,
+    start: state.ui.view.start,
+    end: state.ui.view.end,
   };
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    load: () => {
-      dispatch(fetch());
+    load: (start: moment.Moment, end: moment.Moment) => {
+      dispatch(fetch(start, end));
     }
   };
 }
@@ -66,7 +68,7 @@ const mapDispatchToProps = (dispatch: any) => {
 class LoadHandlerA extends React.Component<any, any> {
 
   componentDidMount() {
-    this.props.load();
+    this.props.load(this.props.start, this.props.end);
   }
 
   render() {

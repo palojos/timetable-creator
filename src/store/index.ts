@@ -6,11 +6,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import * as reducers from '@app/reducers';
 
 import thunk from 'redux-thunk';
-//import logger from 'redux-logger';
+import logger from 'redux-logger';
 
 // Exporting store configuration function
 export function configureStore() {
-  const middleware = applyMiddleware(thunk);
+  const middleware = applyMiddleware(thunk, logger);
   const rootReducer = combineReducers(reducers);
   const store = createStore(rootReducer, middleware);
 

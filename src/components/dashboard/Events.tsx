@@ -15,9 +15,9 @@ export interface Event {
   name: string;
   start: moment.Moment;
   end: moment.Moment;
-  room?: Schema.Calendar;
-  group?: Schema.Calendar;
-  teacher?: Schema.Calendar;
+  room?: Schema.Calendar[];
+  group?: Schema.Calendar[];
+  teacher?: Schema.Calendar[];
   owner?: Schema.Calendar
 }
 
@@ -35,7 +35,7 @@ const mapStateToProps = (state: Schema.Store) => {
       const f = (type: Schema.CalendarType) => flow(
           map((key: Schema.EntityId) => state.entities.calendars[key]),
           filter((c: Schema.Calendar) => c.meta.type === type),
-        )(e.participants)[0];
+        )(e.participants);
 
       const event: Event = {
         id: e.id,
@@ -86,7 +86,6 @@ const mapStateToProps = (state: Schema.Store) => {
   )(state.resources.events)
 
   const u = union(events)(resources);
-  console.log(u);
 
   return {
     events: u.length !== 0 ? sortBy((e: Event) => e.start.valueOf())(u) : [],
@@ -108,9 +107,8 @@ const mapDispatchToProps = (dispatch: any) => {
         name: e.name,
         start: e.start.format(),
         end: e.end.format(),
-        group: e.group ? e.group : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
-        teacher: e.teacher ? e.teacher : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
-        room: e.room ? e.room : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
+        attendees: union(e.teacher ? e.teacher : [])(union(e.group ? e.group : [])(e.room ? e.room : [])),
+        room: e.room ? e.room[0] : {id: "", name: "", description: "", meta: {type: "GROUP", tag: ""}},
       }));
     }
   }
@@ -197,9 +195,21 @@ const EventView = (props: EventViewProps) => {
   ) : (
     <ListGroupItem>
     <h6> {props.event.name} <Badge color="primary" className="float-right"> {props.event.start.format('HH:mm-') + props.event.end.format('HH:mm')} </Badge></h6>
-    <span>Teacher: {props.event.teacher ? props.event.teacher.name : "Not defined"}</span><br />
-    <span>Group: {props.event.group ? props.event.group.name : "Not defined"}</span><br />
-    <span>Room: {props.event.room ? props.event.room.name : "Not defined"}</span><br />
+    {
+      props.event.teacher ? props.event.teacher.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Teacher: {c.name} </div>);
+      }) : ""
+    }
+    {
+      props.event.group ? props.event.group.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Group: {c.name} </div>);
+      }) : ""
+    }
+    {
+      props.event.room ? props.event.room.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Room: {c.name} </div>)
+      }) : ""
+    }
     <button className="btn btn-primary" onClick={handleOnDelete}>Remove</button>
     </ListGroupItem>
   );

@@ -4,14 +4,15 @@ import * as api from '@app/actions/api';
 import { Dispatch } from 'redux';
 import { to } from '@app/actions/util';
 
+import { map } from 'lodash/fp';
+
 
 export interface TeachEventParams {
   start: string,
   end: string,
   name: string,
   room: Schema.Calendar,
-  group: Schema.Calendar,
-  teacher: Schema.Calendar,
+  attendees: Schema.Calendar[],
 }
 
 const TAG = 'timetable-creator:TEACH_EVENT'
@@ -30,23 +31,10 @@ export function createTeachEvent(history: any, params: TeachEventParams) {
       summary: params.name,
       description: TAG,
       location: params.room.name,
-      attendees: [
-        {
-          email: params.teacher.id,
-          responseStatus:'accepted',
-        },
-        {
-          email: params.room.id,
-          responseStatus: 'accepted',
-        },
-        {
-          email: params.group.id,
-          responseStatus: 'accepted',
-        }
-      ]
+      attendees: map<Schema.Calendar, {email: string; responseStatus: 'accepted'}>((c: Schema.Calendar) => {return {email: c.id, responseStatus: 'accepted'}})(params.attendees)
     };
 
-    const owner = params.group.id;
+    const owner = params.room.id;
 
     let data, err;
 
@@ -68,11 +56,7 @@ export function createTeachEvent(history: any, params: TeachEventParams) {
         start: data.start.dateTime,
         end: data.end.dateTime
       },
-      participants: [
-        params.teacher.id,
-        params.room.id,
-        params.group.id,
-      ]
+      participants: map<Schema.Calendar, string>((c: Schema.Calendar) => c.id)(params.attendees),
     }
 
     const action: Action = {
@@ -102,23 +86,10 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
       summary: params.name,
       description: TAG,
       location: params.room.name,
-      attendees: [
-        {
-          email: params.teacher.id,
-          responseStatus:'accepted',
-        },
-        {
-          email: params.room.id,
-          responseStatus: 'accepted',
-        },
-        {
-          email: params.group.id,
-          responseStatus: 'accepted',
-        }
-      ]
+      attendees: map<Schema.Calendar, {email: string; responseStatus: 'accepted'}>((c: Schema.Calendar) => {return {email: c.id, responseStatus: 'accepted'}})(params.attendees)
     };
 
-    const owner = params.group.id;
+    const owner = params.room.id;
 
     let data, err;
 
@@ -138,10 +109,7 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
         start: data.start.dateTime,
         end: data.end.dateTime
       },
-      participants: [
-        params.teacher.id,
-        params.room.id,
-      ]
+      participants: map<Schema.Calendar, string>((c: Schema.Calendar) => c.id)(params.attendees)
     }
 
     const action: Action = {
@@ -169,23 +137,10 @@ export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
       summary: params.name,
       description: TAG,
       location: params.room.name,
-      attendees: [
-        {
-          email: params.teacher.id,
-          responseStatus:'accepted',
-        },
-        {
-          email: params.room.id,
-          responseStatus: 'accepted',
-        },
-        {
-          email: params.group.id,
-          responseStatus: 'accepted',
-        }
-      ]
+      attendees: map<Schema.Calendar, {email: string; responseStatus: 'accepted'}>((c: Schema.Calendar) => {return {email: c.id, responseStatus: 'accepted'}})(params.attendees)
     };
 
-    const owner = params.group.id;
+    const owner = params.room.id;
 
     let data, err;
 

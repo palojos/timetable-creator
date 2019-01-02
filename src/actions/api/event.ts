@@ -4,8 +4,6 @@ import { Dispatch } from 'redux';
 import { client, to } from '@app/actions/util';
 import uuidv4 from 'uuid/v4';
 
-import moment from 'moment';
-
 export interface EventApiAction extends Action {
   key: Schema.EntityId;
   flags?: {
@@ -36,7 +34,7 @@ export interface Event {
   [key: string]: any;
 }
 
-export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispatch<any>, nextPageToken?:string, nextSyncToken?:string) {
+export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispatch<any>, nextPageToken?:string, timeMin?: string, timeMax?: string, nextSyncToken?:string,) {
 
   const get = () => {
     let params: {
@@ -44,11 +42,11 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
       orderBy: 'startTime' | 'updated';
       pageToken?: string;
       syncToken?: string;
-      timeMin: string;
+      timeMin?: string;
+      timeMax?: string;
     } = {
       singleEvents: true,
       orderBy: 'startTime',
-      timeMin: moment().startOf('quarter').format(),
     };
 
     if(nextPageToken) {
@@ -57,6 +55,14 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
 
     else if(nextSyncToken) {
       params.syncToken = nextSyncToken;
+    }
+
+    if(timeMin) {
+      params.timeMin = timeMin;
+    }
+
+    if(timeMax) {
+      params.timeMax = timeMax;
     }
 
     return client.request({

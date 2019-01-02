@@ -49,7 +49,7 @@ const mapStateToProps = (state: Schema.Store, props: CreateEventFormProps) => {
       const f = (type: Schema.CalendarType) => flow(
           map((key: Schema.EntityId) => state.entities.calendars[key]),
           filter((c: Schema.Calendar) => c.meta.type === type),
-        )(e.participants)[0];
+        )(e.participants);
 
       const event: Event = {
         id: e.id,
@@ -179,14 +179,13 @@ const mapDispatchToProps = (dispatch: any, props: CreateEventFormProps) => {
     error: (message: string) => {
       dispatch(ui.error(message));
     },
-    createEvent: (event: CreateEvent) => {
+    createEvent: (e: CreateEvent) => {
       dispatch(entities.createTeachEvent(props.history, {
-        name: event.name,
-        start: event.start.format(),
-        end: event.end.format(),
-        teacher: event.teacher,
-        group: event.group,
-        room: event.room,
+        name: e.name,
+        start: e.start.format(),
+        end: e.end.format(),
+        attendees: [e.teacher, e.group, e.room],
+        room: e.room,
       }));
       dispatch(ui.clearPresets())
     },
@@ -343,9 +342,21 @@ class CreateEventFormView extends React.Component<any, CreateEventFormViewState>
               ) : (
               <ListGroupItem key={event.id}>
                 <h6> {event.name} <Badge color="primary" className="float-right"> {event.start.format('HH:mm-') + event.end.format('HH:mm')} </Badge></h6>
-                <span>Teacher: {event.teacher ? event.teacher.name : "Not defined"}</span><br />
-                <span>Group: {event.group ? event.group.name : "Not defined"}</span><br />
-                <span>Room: {event.room ? event.room.name : "Not defined"}</span><br />
+    {
+      this.props.event.teacher ? this.props.event.teacher.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Teacher: {c.name} </div>);
+      }) : ""
+    }
+    {
+      this.props.event.group ? this.props.event.group.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Group: {c.name} </div>);
+      }) : ""
+    }
+    {
+      this.props.event.room ? this.props.event.room.map((c: Schema.Calendar) => {
+        return (<div key={c.id}>Room: {c.name} </div>)
+      }) : ""
+    }
               </ListGroupItem>
               );
           })

@@ -6,6 +6,12 @@ export function clearEntities() {
   }
 }
 
+export function clearEvents() {
+  return {
+    type: "CLEAR_EVENTS"
+  }
+}
+
 export * from './calendar';
 export * from './event';
 export * from './fetch'

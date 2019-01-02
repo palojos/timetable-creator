@@ -1,14 +1,14 @@
 import { Schema } from '@app/store';
-import { ActionEntities, ActionResource } from '@app/actions';
+import { ActionEntities, ActionResource, entities } from '@app/actions';
 import * as api from '@app/actions/api';
 import { to } from '@app/actions/util';
 
 import { map, concat } from 'lodash/fp';
+import  moment from 'moment';
 
-export function fetch() {
+export function fetch(start: moment.Moment, end: moment.Moment) {
 
   return async (dispatch: any) => {
-
     // assign dispatcher to module wide variable
     //indicate that we are starting to load data
     dispatch({
@@ -25,12 +25,33 @@ export function fetch() {
 
     if(err) return Promise.reject(complete(dispatch));
 
-    [data, err] = await to(loadCalendars(data, dispatch));
+    [data, err] = await to(loadCalendars(data, dispatch, start.format(), end.clone().add(1, 'day').format() ));
 
     if(err) return Promise.reject(complete(dispatch));
 
     return Promise.resolve(complete(dispatch));
   }
+}
+
+
+export function fetchEvents(calendarIds: Schema.EntityId[], start: moment.Moment, end: moment.Moment) {
+
+  return async (dispatch: any) => {
+    
+    dispatch(entities.clearEvents());
+
+    const collection = map((id: Schema.EntityId) => {
+      return loadEvents(id, start.format(), end.clone().add(1, 'day').format(), dispatch);
+    })(calendarIds);
+
+    let data, err;
+
+    [data, err] = await to(Promise.all(collection));
+
+    if (err) return Promise.reject(err);
+
+    return Promise.resolve(data);
+   }
 }
 
 async function loadCalendarIds(dispatch: any, nextPageToken?: string): Promise<Schema.EntityId[]> {
@@ -57,10 +78,10 @@ async function loadCalendarIds(dispatch: any, nextPageToken?: string): Promise<S
 
 }
 
-async function loadCalendars(calendarIds: Schema.EntityId[], dispatch: any): Promise<any> {
+async function loadCalendars(calendarIds: Schema.EntityId[], dispatch: any, start: string, end: string): Promise<any> {
 
   const collection = map((id: Schema.EntityId) => {
-    return loadCalendar(id, dispatch);
+    return loadCalendar(id, start, end, dispatch);
   })(calendarIds);
 
   let data, err;
@@ -72,7 +93,7 @@ async function loadCalendars(calendarIds: Schema.EntityId[], dispatch: any): Pro
   return Promise.resolve(data);
 }
 
-async function loadCalendar(calendarId: Schema.EntityId, dispatch: any): Promise<any> {
+async function loadCalendar(calendarId: Schema.EntityId, start: string, end: string, dispatch: any): Promise<any> {
 
   let data, err;
 
@@ -80,20 +101,22 @@ async function loadCalendar(calendarId: Schema.EntityId, dispatch: any): Promise
 
   if (err) return Promise.reject(err);
 
-  storeCalendar(data, dispatch);
+  const isResource = storeCalendar(data, dispatch);
 
-  [data, err] = await to(loadEvents(calendarId, dispatch));
+  if (isResource) return Promise.resolve();
+
+  [data, err] = await to(loadEvents(calendarId, start, end, dispatch,));
 
   if (err) return Promise.reject(err);
 
   return Promise.resolve();
 }
 
-async function loadEvents(calendarId: Schema.EntityId, dispatch: any, nextPageToken?: string): Promise<any> {
+async function loadEvents(calendarId: Schema.EntityId, timeMin: string, timeMax: string, dispatch: any, nextPageToken?: string): Promise<any> {
 
   let data, err;
 
-  [data, err] = await to(api.getEventList(calendarId, dispatch, nextPageToken=nextPageToken));
+  [data, err] = await to(api.getEventList(calendarId, dispatch, nextPageToken=nextPageToken, timeMin=timeMin, timeMax=timeMax));
 
   if (err) return Promise.reject(err);
 
@@ -103,7 +126,7 @@ async function loadEvents(calendarId: Schema.EntityId, dispatch: any, nextPageTo
 
   if (!data.nextPageToken)  return Promise.resolve();
 
-  [data, err] = await to(loadEvents(calendarId, dispatch, data.nextPageToken));
+  [data, err] = await to(loadEvents(calendarId, timeMin, timeMax, dispatch, data.nextPageToken));
 
   if (err) return Promise.reject(err);
 
@@ -111,7 +134,7 @@ async function loadEvents(calendarId: Schema.EntityId, dispatch: any, nextPageTo
 
 }
 
-function storeCalendar(gapiCalendar: any, dispatch: any) {
+function storeCalendar(gapiCalendar: any, dispatch: any): boolean{
 
   const meta = parseCalendarMeta(gapiCalendar.description);
 
@@ -128,6 +151,8 @@ function storeCalendar(gapiCalendar: any, dispatch: any) {
       key: gapiCalendar.id,
       data: calendar,
     });
+
+    return false;
   }
 
   else {
@@ -142,6 +167,8 @@ function storeCalendar(gapiCalendar: any, dispatch: any) {
       key: gapiCalendar.id,
       data: calendar,
     });
+
+    return true;
   }
 }
 

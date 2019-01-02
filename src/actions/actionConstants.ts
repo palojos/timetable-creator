@@ -66,7 +66,8 @@ export type ActionEntities =
   | "CREATE_TEACH_EVENT"
   | "UPDATE_TEACH_EVENT"
   | "DELETE_TEACH_EVENT"
-  | "CLEAR_ENTITIES";
+  | "CLEAR_ENTITIES"
+  | "CLEAR_EVENTS";
 
 export const ActionEntities: {[key: string]: ActionEntities} = {
   CREATE_CALENDAR: "CREATE_CALENDAR",

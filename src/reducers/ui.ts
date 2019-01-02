@@ -7,8 +7,8 @@ import { assign, filter, union } from 'lodash/fp';
 
 const defaultState: Schema.UIState = {
   view: {
-    start: moment().isoWeekday(1),
-    end: moment().isoWeekday(5),
+    start: moment('0000', 'hhmm').isoWeekday(1),
+    end: moment('0000', 'hhmm').isoWeekday(5),
   },
   e_start: moment().startOf('day').hour(9),
   e_end: moment().startOf('day').hour(11),
