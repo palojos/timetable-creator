@@ -11,6 +11,8 @@ import { CalendarSelector } from './CalendarSelector';
 import { Events } from './Events';
 import { CreateEventForm } from '@app/components/forms'
 
+import moment from 'moment';
+
 
 const mapStateToProps = (state: Schema.Store) => {
   return {
@@ -19,6 +21,17 @@ const mapStateToProps = (state: Schema.Store) => {
 }
 
 const DashboardView = (props: any) => {
+
+  const expires_in = window.localStorage['gapi:expires_in'];
+  const acquired_at = moment(window.localStorage['gapi:acquired_at']);
+
+  console.log(acquired_at, moment())
+
+  const isExpired = moment().isSameOrAfter(acquired_at.add(expires_in, 'second'));
+
+  if(isExpired) {
+    props.history.push('/auth/logout');
+  }
 
   return props.loading ? (<Redirect to="/"/>) : (
     <React.Fragment>

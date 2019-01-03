@@ -24,7 +24,6 @@ export class LoginForm extends React.Component {
         <input type="hidden" name="include_granted_scopes" value="true" />
         <input type="hidden" name="state" value={nonce} />
         <input type="hidden" name="response_type" value="token" />
-        <input type="hidden" name="prompt" value="consent" />
       </form>
     );
   }

@@ -2,6 +2,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { flow, split, map, keyBy, mapValues} from 'lodash/fp';
 
+import moment from 'moment';
+
 
 export const LoginHandler = () => {
 
@@ -22,7 +24,7 @@ export const LoginHandler = () => {
   if( !params.error && nonce == params.state) {
     window.localStorage['gapi:token'] = params['access_token'];
     window.localStorage['gapi:expires_in'] = params['expires_in'];
-    window.localStorage['gapi:acquired_at'] = Date.now().toString();
+    window.localStorage['gapi:acquired_at'] = moment().format();
   }
 
   window.localStorage['login:nonce'] = ""
