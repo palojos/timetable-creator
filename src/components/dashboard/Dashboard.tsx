@@ -25,8 +25,6 @@ const DashboardView = (props: any) => {
   const expires_in = window.localStorage['gapi:expires_in'];
   const acquired_at = moment(window.localStorage['gapi:acquired_at']);
 
-  console.log(acquired_at, moment())
-
   const isExpired = moment().isSameOrAfter(acquired_at.add(expires_in, 'second'));
 
   if(isExpired) {

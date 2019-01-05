@@ -134,7 +134,6 @@ interface CreateEventFormViewState {
     teacher: boolean;
     group: boolean;
     room: boolean;
-    size: boolean;
   };
 }
 
@@ -175,10 +174,6 @@ class CreateEventFormView extends React.Component<CreateEventFormViewProps, Crea
     )(validator)
   );
 
-  groupSize = memoize(
-    (groups: Schema.Calendar[]) => reduce((res: number, c: Schema.Calendar) => c.meta.size ? res + c.meta.size : res, 0)(groups)
-  );
-
   unselectedTeachers = memoize(
     (selection: Schema.Calendar[], all: Schema.Calendar[]) => {
       const ids = map( (c:Schema.Calendar) => c.id)(selection);
@@ -214,7 +209,6 @@ class CreateEventFormView extends React.Component<CreateEventFormViewProps, Crea
         teacher: false,
         group: false,
         room: false,
-        size: false,
       },
     };
 
@@ -240,8 +234,6 @@ class CreateEventFormView extends React.Component<CreateEventFormViewProps, Crea
         this.selectedCalendars(this.state.groups, this.state.teachers, this.state.room)
       )
     ).length === 0 && this.state.e_start.isBefore(this.state.e_end);
-    const roomSize = this.state.room ? this.state.room.meta.size : undefined;
-    const isSizeValid = roomSize ? roomSize >= this.groupSize(this.state.groups) : true;
 
     this.setState({
       isValid: {
@@ -250,7 +242,6 @@ class CreateEventFormView extends React.Component<CreateEventFormViewProps, Crea
         teacher: isTeacherValid,
         room: isRoomValid,
         group: isGroupValid,
-        size: isSizeValid,
       },
     });
   }
@@ -379,7 +370,6 @@ class CreateEventFormView extends React.Component<CreateEventFormViewProps, Crea
           {!this.state.isValid.teacher ? (<Alert color="warning">Please select least one teacher</Alert>) : null}
           {!this.state.isValid.group ? (<Alert color="warning">Please select least one group</Alert>) : null}
           {!this.state.isValid.room ? (<Alert color="warning">Please select room</Alert>) : null}
-          {this.state.isValid.room && this.state.isValid.group && !this.state.isValid.size ? (<Alert color="warning">Room does not have enough capacity for groups</Alert>) : null}
         </Col>
         <Col>
           <hr />

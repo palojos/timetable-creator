@@ -34,7 +34,7 @@ export interface Event {
   [key: string]: any;
 }
 
-export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispatch<any>, nextPageToken?:string, timeMin?: string, timeMax?: string, nextSyncToken?:string,) {
+export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispatch<any>, nextPageToken?:string, timeMin?: string, timeMax?: string) {
 
   const get = () => {
     let params: {
@@ -51,10 +51,6 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
 
     if(nextPageToken) {
       params.pageToken = nextPageToken;
-    }
-
-    else if(nextSyncToken) {
-      params.syncToken = nextSyncToken;
     }
 
     if(timeMin) {
@@ -76,7 +72,6 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
   const nonce = uuidv4();
   const flags = {
     hasPageToken: nextPageToken != undefined,
-    hasSyncToken: nextSyncToken != undefined
   };
 
   dispatch({
@@ -96,7 +91,7 @@ export async function getEventList(calendarId: Schema.EntityId, dispatch: Dispat
       flags,
       statusCode: err.response.status
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -134,7 +129,7 @@ export async function getEvent(calendarId: Schema.EntityId, eventId: Schema.Enti
       key: eventId,
       statusCode: err.response.status
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -175,7 +170,7 @@ export async function postEvent(calendarId: Schema.EntityId, event: Event, dispa
       key: nonce,
       statusCode: err.response.status
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -214,7 +209,7 @@ export async function putEvent(calendarId: Schema.EntityId, event: Event, dispat
       key: event.id,
       statusCode: err.response.status
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -252,7 +247,7 @@ export async function deleteEvent(calendarId: Schema.EntityId, event: Event, dis
       key: event.id,
       statusCode: err.response.status
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 

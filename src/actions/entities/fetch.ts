@@ -40,7 +40,7 @@ export function fetchEvents(calendarIds: Schema.EntityId[], start: moment.Moment
     dispatch(entities.clearEvents());
 
     const collection = map((id: Schema.EntityId) => {
-      return loadEvents(id, start.format(), end.clone().add(1, 'day').format(), dispatch);
+      return loadEvents(id, start.clone().format(), end.clone().add(1, 'day').format(), dispatch);
     })(calendarIds);
 
     let data, err;

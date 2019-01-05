@@ -89,7 +89,7 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
       attendees: map<Schema.Calendar, {email: string; responseStatus: 'accepted'}>((c: Schema.Calendar) => {return {email: c.id, responseStatus: 'accepted'}})(params.attendees)
     };
 
-    const owner = params.room.id;
+    const owner = eventId.split("/")[0];
 
     let data, err;
 
@@ -125,7 +125,7 @@ export function updateTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
 export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventParams) {
 
   return async function(dispatch: any) {
-    const id = eventId.split("/")[1]
+    const id = eventId.split("/")[1];
     const event: api.Event = {
       start: {
         dateTime: params.start,
@@ -140,7 +140,7 @@ export function deleteTeachEvent(eventId: Schema.EntityId, params: TeachEventPar
       attendees: map<Schema.Calendar, {email: string; responseStatus: 'accepted'}>((c: Schema.Calendar) => {return {email: c.id, responseStatus: 'accepted'}})(params.attendees)
     };
 
-    const owner = params.room.id;
+    const owner = eventId.split("/")[0];
 
     let data, err;
 

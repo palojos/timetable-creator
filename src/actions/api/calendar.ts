@@ -16,24 +16,19 @@ export interface CalendarApiError extends CalendarApiAction {
   statusCode: number;
 }
 
-export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: string, nextSyncToken?: string) {
+export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: string) {
 
   const get = () => {
     let params : {
       showHidden: boolean
       minAccessRole?: string
       pageToken?: string
-      syncToken?: string
     } = {
       showHidden: true
     }
 
     if (nextPageToken) {
       params.pageToken = nextPageToken;
-    }
-
-    if (nextSyncToken) {
-      params.syncToken = nextSyncToken;
     }
 
     else {
@@ -50,14 +45,13 @@ export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: s
 
   const nonce = uuidv4();
   const hasPageToken = nextPageToken != undefined;
-  const hasSyncToken = nextSyncToken != undefined;
 
   dispatch({
     type: ActionApi.GET_CALENDAR_LIST,
     key: nonce,
     flags: {
       hasPageToken,
-      hasSyncToken
+     
     }
   });
 
@@ -71,11 +65,10 @@ export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: s
       key: nonce,
       statusCode: err.response.status,
       flags: {
-        hasSyncToken,
         hasPageToken
       }
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -84,7 +77,6 @@ export async function getCalendarList(dispatch: Dispatch<any>, nextPageToken?: s
       type: ActionApi.GET_CALENDAR_LIST_SUCCESS,
       key: nonce,
       flags: {
-        hasSyncToken,
         hasPageToken
       }
     });
@@ -117,7 +109,7 @@ export async function getCalendar(id: Schema.EntityId, dispatch: Dispatch<any>) 
       statusCode: err.response.status,
       key: id
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -160,7 +152,7 @@ export async function postCalendar(name: string, dispatch: Dispatch<any>) {
       statusCode: err.response.status,
       key: nonce
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err);
   }
 
@@ -204,7 +196,7 @@ export async function putCalendar(id: Schema.EntityId, name: string, description
       statusCode: err.response.status,
       key: id
     });
-    dispatch(ui.error("Api error: " + err.response.status ));
+    dispatch(ui.error("Api error: " + err.response.data.error.message ));
     return Promise.reject(err)
   }
 
